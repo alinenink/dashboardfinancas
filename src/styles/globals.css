@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Tema padrão e dark */
+html {
+  @apply bg-gray-100 text-gray-800 font-sans;
+}
+
+html.dark {
+  @apply bg-gray-900 text-gray-100;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  @apply bg-gray-100 dark:bg-gray-900;
+}
+
+/* Sidebar estilos gerais */
+.sidebar {
+  @apply bg-white dark:bg-gray-800 shadow-lg p-4 rounded-xl z-20; /* Adiciona um z-index para sobrepor os outros elementos */
+}
+
+/* Desktop: Sidebar posicionada corretamente */
+@media (min-width: 768px) {
+  .sidebar {
+    @apply relative top-[2em] left-16 w-[25em] h-[calc(95vh)] transition-all; /* Sidebar com altura ajustada para desktop */
+  }
+}
+
+/* Mobile: Sidebar com top, left, width ajustados e posição relativa */
+@media (max-width: 767px) {
+  .sidebar {
+    position: relative;
+    transform: translateX(-100%); /* Inicialmente fora da tela */
+    transition: transform 0.3s ease-in-out;
+  }
+}
+
+/* Ajuste no padding do nav para o mobile */
+.sidebar nav {
+  @apply pt-16 md:pt-4; /* Ajuste do padding dependendo da tela */
+}
+
+/* Para alinhamento e espaçamento geral */
+.grid {
+  @apply gap-12;
+}
+
+.card {
+  @apply bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 transition-transform hover:scale-105 hover:shadow-lg z-10 relative;
+}
+
+main {
+  @apply bg-gray-100 dark:bg-gray-900;
+}
+
+header {
+  @apply fixed top-0 w-full min-h-[15%] bg-gradient-to-r from-blue-700 to-blue-500 dark:from-gray-800 dark:to-gray-700 text-white shadow-md z-10;
+}
+
+/* Estilo para o container */
+.card-container {
+  @apply relative top-[8vh] left-[5%] w-[90%] z-10;
+}
+
+@media (max-width: 767px) {
+  .card-container {
+    @apply fixed top-[18vh] left-[6%] w-[86%] z-10;
+  }
+}
+
+.card-pie {
+  @apply  w-[100%];
+}
+
+@media (max-width: 767px) {
+  .card-pie {
+    @apply w-[100%];
+  }
+}
