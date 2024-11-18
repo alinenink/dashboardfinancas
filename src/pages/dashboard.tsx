@@ -31,21 +31,21 @@ const Dashboard = () => {
     <div className="p-6 card-container">
       {/* Resumo geral */}
       <GeneralSummary />
-      <div className="mt-8 grid grid-cols-3 sm:grid-cols-2 md:grid-cols-2 h-[30vh]">
+      <div className="mt-6 grid grid-cols-3 sm:grid-cols-2 md:grid-cols-2">
         <ExpenseCard title="Gastos Mensais" data={expenseData} />
         <MonthlyExpensesChart
           months={months}
           categories={categories}
           data={data}
         />
-      <div className="mt-2 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 w-[77vw]">
-        <MonthlyExpensesLineChart
-          months={months}
-          categories={categories}
-          data={data}
-        />
       </div>
-      </div>
+      <div className="mt-4">
+          <MonthlyExpensesLineChart
+            months={months}
+            categories={categories}
+            data={data}
+          />
+        </div>
     </div>
   );
 };

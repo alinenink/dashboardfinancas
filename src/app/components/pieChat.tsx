@@ -11,6 +11,15 @@ import {
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const ExpenseCard = ({ title, data }) => {
+  // Paleta de cores pastel
+  const pastelColors = [
+    "#F8B4B4", // Rosa pastel
+    "#A3D9A5", // Verde pastel
+    "#F9E79F", // Amarelo pastel
+    "#AFCDEA", // Azul pastel
+    "#C8A2C8", // Roxo pastel
+  ];
+
   // Preparar os dados para o gráfico de doughnut
   const chartData = {
     labels: data.map((item) => item.label), // Exemplo: ['Alimentação', 'Transporte', 'Lazer']
@@ -18,8 +27,8 @@ const ExpenseCard = ({ title, data }) => {
       {
         label: "Gastos Principais",
         data: data.map((item) => item.value), // Exemplo: [200, 100, 50]
-        backgroundColor: ["#FF5733", "#33FF57", "#3357FF", "#FF33A1", "#FF8C00"], // Cores para o gráfico de doughnut
-        borderColor: ["#FF5733", "#33FF57", "#3357FF", "#FF33A1", "#FF8C00"], // Bordas
+        backgroundColor: pastelColors, // Cores pastel para o gráfico de doughnut
+        borderColor: pastelColors, // Bordas pastel
         borderWidth: 1,
       },
     ],
@@ -30,14 +39,22 @@ const ExpenseCard = ({ title, data }) => {
     plugins: {
       legend: {
         position: "top",
+        labels: {
+          font: {
+            size: 14,
+          },
+          color: "currentColor", // Ajusta cor automaticamente para Light/Dark
+        },
       },
     },
-    cutout: "80%", // Tamanho do furo no meio (70% do tamanho do gráfico, você pode ajustar conforme necessário)
+    cutout: "70%", // Tamanho do furo no meio
   };
 
   return (
-    <div className="card flex flex-col items-center justify-center text-center sm:items-center sm:text-left card-pie">
-      <h3 className="text-xl font-bold mb-4">{title}</h3>
+    <div className="card card-pie flex flex-col items-center justify-center text-center h-[47vh]">
+      <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100">
+        {title}
+      </h3>
       <div className="flex justify-center">
         <Doughnut data={chartData} options={chartOptions} />
       </div>
