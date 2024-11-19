@@ -1,12 +1,12 @@
-import MonthlyExpensesChart from "@/app/components/MonthlyExpensesChart";
-import MonthlyExpensesLineChart from "@/app/components/MonthlyExpensesLineChart";
-import FixedVsVariableExpenses from "@/app/components/FixedVsVariableExpenses";
-import FixedVsVariableChart from "@/app/components/FixedVsVariableExpenses";
-import GeneralSummary from "@/app/components/GeneralSummary";
-import ExpenseCard from "@/app/components/ExpenseCard";
-import ProjectionChart from "@/app/components/ProjectionChart";
-import SpendingProjectionChart from "@/app/components/ProjectionChart";
-import TopExpensesChart from "@/app/components/TopExpensesChart";
+import ExpenseCard from "src/app/components/ExpenseCard";
+import FixedVsVariableExpenses from "src/app/components/FixedVsVariableExpenses";
+import GeneralSummary from "src/app/components/GeneralSummary";
+import MonthlyExpensesChart from "src/app/components/MonthlyExpensesChart";
+import MonthlyExpensesLineChart from "src/app/components/MonthlyExpensesLineChart";
+import ProjectionChart from "src/app/components/ProjectionChart";
+import TopExpensesChart from "src/app/components/TopExpensesChart";
+import "@/styles/globals.css";
+
 
 const expenseData = [
   { label: "Alimentação", value: 1200 },

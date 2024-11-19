@@ -9,7 +9,7 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
-import { useTheme } from "@/app/components/ThemeContext";
+import { useTheme } from "./ThemeContext";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip);
 
@@ -20,11 +20,11 @@ interface MonthlyExpensesLineChartProps {
 }
 
 const pastelColors = [
-  "#F8B4B4",
-  "#A3D9A5",
-  "#F9E79F",
-  "#AFCDEA",
-  "#C8A2C8",
+  "#F8B4B4", // Rosa pastel
+  "#A3D9A5", // Verde pastel
+  "#F9E79F", // Amarelo pastel
+  "#AFCDEA", // Azul pastel
+  "#C8A2C8", // Roxo pastel
 ];
 
 const MonthlyExpensesLineChart: React.FC<MonthlyExpensesLineChartProps> = ({
@@ -38,15 +38,19 @@ const MonthlyExpensesLineChart: React.FC<MonthlyExpensesLineChartProps> = ({
   useEffect(() => {
     const options = {
       responsive: true,
-      maintainAspectRatio: true, // Mantém o gráfico dentro do card
+      maintainAspectRatio: true,
       plugins: {
         tooltip: {
           callbacks: {
-            label: (context: any) => `R$ ${context.raw}`,
+            label: (context: any) => `R$ ${context.raw?.toFixed(2)}`,
           },
         },
         legend: {
-          display: false,
+          display: true, // Mostrar a legenda para identificar as tendências
+          labels: {
+            color: isDarkMode ? "#f3f4f6" : "#1f2937",
+            font: { size: 12 },
+          },
         },
       },
       scales: {
@@ -74,46 +78,32 @@ const MonthlyExpensesLineChart: React.FC<MonthlyExpensesLineChartProps> = ({
     setChartOptions(options);
   }, [isDarkMode]);
 
-  const visibleMonths = months.slice(0, 3);
-  const visibleData = data.slice(0, 3);
-
   const chartData = {
-    labels: visibleMonths,
+    labels: months, // Mostra todos os meses
     datasets: categories.map((category, index) => ({
-      label: category,
-      data: visibleData.map((month) => month[index]),
+      label: category, // Nome da categoria para a legenda
+      data: data.map((month) => month[index]), // Valores de tendência ao longo dos meses
       borderColor: pastelColors[index],
       backgroundColor: pastelColors[index],
       borderWidth: 2,
       pointRadius: 5,
       pointBackgroundColor: pastelColors[index],
+      tension: 0.3, // Suaviza as linhas para mostrar tendências
     })),
   };
 
   return (
     <div className="flex flex-col p-4 bg-white dark:bg-gray-800 shadow-md rounded-lg h-[36vh] overflow-hidden">
       <h3 className="text-lg font-bold mb-4 text-left text-gray-800 dark:text-gray-100">
-        Comparação Mensal de Gastos
+        Tendências Temporais de Gastos
       </h3>
 
       <div className="flex-grow overflow-hidden">
         <Line data={chartData} options={chartOptions} />
       </div>
 
-      <div className="flex flex-wrap justify-center gap-3 mt-3">
-        {categories.map((category, index) => (
-          <div key={category} className="flex items-center">
-            <div
-              className="w-4 h-4 rounded-full mr-2"
-              style={{
-                backgroundColor: pastelColors[index],
-              }}
-            ></div>
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              {category}
-            </span>
-          </div>
-        ))}
+      <div className="mt-4 text-sm text-gray-700 dark:text-gray-300">
+        Este gráfico mostra as tendências temporais de gastos ao longo dos meses, ajudando a identificar padrões de aumento ou redução nas categorias.
       </div>
     </div>
   );

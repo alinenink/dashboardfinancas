@@ -1,10 +1,21 @@
 import React, { useState } from "react";
 import { AiOutlineDashboard, AiOutlineSetting } from "react-icons/ai";
+import Image from "next/image";
 
 // Mock data for the months and categories (you can replace them with dynamic data)
 const months = [
-  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", 
-  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+  "Janeiro",
+  "Fevereiro",
+  "Março",
+  "Abril",
+  "Maio",
+  "Junho",
+  "Julho",
+  "Agosto",
+  "Setembro",
+  "Outubro",
+  "Novembro",
+  "Dezembro",
 ];
 const categories = ["Alimentação", "Transporte", "Saúde", "Lazer", "Educação"];
 
@@ -23,7 +34,7 @@ const Sidebar = () => {
       selectedCategory,
       periodType,
       startDate,
-      endDate
+      endDate,
     });
   };
 
@@ -45,20 +56,27 @@ const Sidebar = () => {
       >
         {/* Logo no topo */}
         <div className="flex justify-center mt-[10rem] mb-8">
-          <img
-            src="/logo.png" // Logo do dashboard
+          <Image
+            src="/logo.png" // Caminho relativo baseado na pasta `public`
             alt="Logo"
-            className="w-[11rem] h-[10rem] rounded-full"
+            width={200} // Largura da imagem em pixels
+            height={200} // Altura da imagem em pixels
           />
         </div>
 
         {/* Bloco das opções */}
         <nav className="space-y-6 pt-18 md:pt-16 px-6 mb-[7rem]">
-          <a href="#" className="flex items-center text-lg font-bold text-gray-700 dark:text-gray-100">
+          <a
+            href="#"
+            className="flex items-center text-lg font-bold text-gray-700 dark:text-gray-100"
+          >
             <AiOutlineDashboard className="mr-2" />
             Visão Geral
           </a>
-          <a href="#" className="flex items-center text-lg font-bold text-gray-700 dark:text-gray-100">
+          <a
+            href="#"
+            className="flex items-center text-lg font-bold text-gray-700 dark:text-gray-100"
+          >
             <AiOutlineSetting className="mr-2" />
             Configurações
           </a>
@@ -68,7 +86,12 @@ const Sidebar = () => {
         <div className="px-6 mt-6 space-y-4">
           {/* Filtro: Período Fixo */}
           <div>
-            <label htmlFor="periodo-fixo" className="text-sm font-bold dark:text-gray-200">Período Fixo</label>
+            <label
+              htmlFor="periodo-fixo"
+              className="text-sm font-bold dark:text-gray-200"
+            >
+              Período Fixo
+            </label>
             <select
               id="periodo-fixo"
               value={selectedMonth}
@@ -77,14 +100,21 @@ const Sidebar = () => {
             >
               <option value="">Selecione o mês</option>
               {months.map((month) => (
-                <option key={month} value={month}>{month}</option>
+                <option key={month} value={month}>
+                  {month}
+                </option>
               ))}
             </select>
           </div>
 
           {/* Filtro: Tipo de Gasto */}
           <div>
-            <label htmlFor="tipo-gasto" className="text-sm font-bold dark:text-gray-200">Tipo de Gasto</label>
+            <label
+              htmlFor="tipo-gasto"
+              className="text-sm font-bold dark:text-gray-200"
+            >
+              Tipo de Gasto
+            </label>
             <select
               id="tipo-gasto"
               value={selectedCategory}
@@ -93,14 +123,21 @@ const Sidebar = () => {
             >
               <option value="">Selecione o tipo de gasto</option>
               {categories.map((category) => (
-                <option key={category} value={category}>{category}</option>
+                <option key={category} value={category}>
+                  {category}
+                </option>
               ))}
             </select>
           </div>
 
           {/* Filtro: Período Personalizado */}
           <div>
-            <label htmlFor="periodo-personalizado" className="text-sm font-bold dark:text-gray-200">Período Personalizado</label>
+            <label
+              htmlFor="periodo-personalizado"
+              className="text-sm font-bold dark:text-gray-200"
+            >
+              Período Personalizado
+            </label>
             <select
               id="periodo-personalizado"
               value={periodType}

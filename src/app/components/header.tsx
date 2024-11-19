@@ -1,6 +1,6 @@
 import React from "react";
-import { useTheme } from "@/app/components/ThemeContext";
 import { FaMoon, FaSun } from "react-icons/fa"; // Importando ícones
+import { useTheme } from "./ThemeContext";
 
 export default function Header() {
   const { isDarkMode, toggleTheme } = useTheme();

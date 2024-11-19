@@ -1,6 +1,6 @@
 import React from "react";
 import { AiOutlineDollar, AiOutlineCreditCard, AiOutlineBank } from "react-icons/ai";
-import { useTheme } from "@/app/components/ThemeContext"; // Importando o useTheme
+import { useTheme } from "./ThemeContext";
 
 interface SummaryCardProps {
   title: string;

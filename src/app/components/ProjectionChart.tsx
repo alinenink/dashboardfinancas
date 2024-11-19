@@ -9,7 +9,7 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
-import { useTheme } from "@/app/components/ThemeContext"; // Adicionando o import para o ThemeContext
+import { useTheme } from "./ThemeContext";
 
 // Registrar os elementos do Chart.js necessários
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip);
