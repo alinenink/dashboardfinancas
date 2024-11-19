@@ -5,7 +5,6 @@ import MonthlyExpensesChart from "src/app/components/MonthlyExpensesChart";
 import MonthlyExpensesLineChart from "src/app/components/MonthlyExpensesLineChart";
 import ProjectionChart from "src/app/components/ProjectionChart";
 import TopExpensesChart from "src/app/components/TopExpensesChart";
-import "@/styles/globals.css";
 
 
 const expenseData = [

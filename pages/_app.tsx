@@ -1,9 +1,9 @@
 
 import { AppProps } from "next/app";
-import '@/styles/globals.css';
-import Header from "@/components/header";
-import Sidebar from "@/components/Sidebar";
-import { ThemeProvider } from "@/components/ThemeContext";
+import 'styles/globals.css';
+import Header from "src/app/components/header";
+import Sidebar from "src/app/components/Sidebar";
+import { ThemeProvider } from "src/app/components/ThemeContext";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
