@@ -13,7 +13,18 @@ import {
 // Registrando os elementos do Chart.js necessários
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
 
-const MonthlyExpensesLineChart = ({ months, categories, data }) => {
+// Definição dos tipos das props
+interface MonthlyExpensesLineChartProps {
+  months: string[]; // Array de strings representando os meses
+  categories: string[]; // Array de strings representando as categorias
+  data: number[][]; // Array de arrays de números, representando os dados das categorias ao longo dos meses
+}
+
+const MonthlyExpensesLineChart: React.FC<MonthlyExpensesLineChartProps> = ({
+  months,
+  categories,
+  data,
+}) => {
   // Paleta de cores pastel
   const pastelColors = [
     "#F8B4B4", // Rosa pastel
@@ -25,60 +36,59 @@ const MonthlyExpensesLineChart = ({ months, categories, data }) => {
 
   // Preparar os dados para o gráfico de linha
   const chartData = {
-    labels: months, // Meses para a comparação (ex: ['Janeiro', 'Fevereiro', 'Março'])
+    labels: months, // Meses para a comparação
     datasets: categories.map((category, index) => ({
-      label: category, // Nome da categoria (ex: "Alimentação")
-      data: data[index], // Dados para cada categoria
-      fill: false, // Não preenche a área abaixo da linha
-      borderColor: pastelColors[index % pastelColors.length], // Cor pastel para a linha
-      pointBackgroundColor: pastelColors[index % pastelColors.length], // Cor do ponto
+      label: category,
+      data: data[index],
+      borderColor: pastelColors[index % pastelColors.length], // Cor da linha
+      backgroundColor: pastelColors[index % pastelColors.length], // Cor dos pontos
       tension: 0.3, // Suavização da linha
       borderWidth: 2,
+      pointRadius: 4,
     })),
   };
 
+  // Opções do gráfico
   const chartOptions = {
     responsive: true,
     plugins: {
       legend: {
-        position: "top",
+        position: "top" as const, // Define explicitamente como "top"
         labels: {
           font: {
             size: 14,
           },
-          color: "currentColor", // Ajusta a cor para o tema Light/Dark
+          color: "currentColor", // Ajusta cor automaticamente para Light/Dark
         },
       },
     },
     scales: {
       x: {
         ticks: {
-          color: "currentColor", // Ajusta a cor das labels no eixo X
+          color: "currentColor", // Ajusta cor das labels no eixo X
         },
         grid: {
-          color: "rgba(255, 255, 255, 0.1)", // Cor do grid no Dark Mode
+          color: "rgba(255, 255, 255, 0.1)", // Cor do grid para Dark Mode
         },
       },
       y: {
         beginAtZero: true,
         ticks: {
-          color: "currentColor", // Ajusta a cor das labels no eixo Y
+          color: "currentColor", // Ajusta cor das labels no eixo Y
         },
         grid: {
-          color: "rgba(255, 255, 255, 0.1)", // Cor do grid no Dark Mode
+          color: "rgba(255, 255, 255, 0.1)", // Cor do grid para Dark Mode
         },
       },
     },
   };
 
   return (
-    <div className="card flex flex-col items-center justify-center text-center">
+    <div className="card card-pie">
       <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100">
         Comparação Mensal de Gastos
       </h3>
-      <div className="flex justify-center">
-        <Line data={chartData} options={chartOptions} width={1500} height={250} />
-      </div>
+      <Line data={chartData} options={chartOptions} />
     </div>
   );
 };

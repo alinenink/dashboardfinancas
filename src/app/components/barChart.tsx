@@ -12,7 +12,18 @@ import {
 // Registrando os elementos do Chart.js necessários
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
-const MonthlyExpensesChart = ({ months, categories, data }) => {
+// Definição do tipo das props
+interface MonthlyExpensesChartProps {
+  months: string[]; // Array de strings para os meses
+  categories: string[]; // Array de strings para as categorias
+  data: number[][]; // Array de arrays de números para os dados
+}
+
+const MonthlyExpensesChart: React.FC<MonthlyExpensesChartProps> = ({
+  months,
+  categories,
+  data,
+}) => {
   // Paleta de cores pastel para as categorias
   const categoryColors = [
     "#F8B4B4", // Alimentação (rosa pastel)
@@ -34,52 +45,43 @@ const MonthlyExpensesChart = ({ months, categories, data }) => {
     })),
   };
 
+  // Opções do gráfico
   const chartOptions = {
     responsive: true,
     plugins: {
       legend: {
-        position: "top",
+        position: "top" as const, // Define explicitamente como "top"
         labels: {
-          color:
-            typeof window !== "undefined"
-              ? getComputedStyle(document.documentElement).getPropertyValue("--text-color") || "gray"
-              : "gray", // Valor padrão se não estiver no browser
           font: {
             size: 14,
           },
+          color: "currentColor", // Ajusta cor automaticamente para Light/Dark
         },
       },
     },
     scales: {
       x: {
         ticks: {
-          color:
-            typeof window !== "undefined"
-              ? getComputedStyle(document.documentElement).getPropertyValue("--text-color") || "gray"
-              : "gray", // Valor padrão
+          color: "currentColor", // Ajusta cor das labels no eixo X automaticamente
         },
         grid: {
-          color: "rgba(255, 255, 255, 0.1)", // Grid discreto para tema escuro
+          color: "rgba(255, 255, 255, 0.1)", // Cor do grid para Dark Mode
         },
       },
       y: {
         beginAtZero: true,
         ticks: {
-          color:
-            typeof window !== "undefined"
-              ? getComputedStyle(document.documentElement).getPropertyValue("--text-color") || "gray"
-              : "gray", // Valor padrão
+          color: "currentColor", // Ajusta cor das labels no eixo Y automaticamente
         },
         grid: {
-          color: "rgba(255, 255, 255, 0.1)", // Grid discreto para tema escuro
+          color: "rgba(255, 255, 255, 0.1)", // Cor do grid para Dark Mode
         },
       },
     },
   };
-  
-  
+
   return (
-    <div className="card card-pie h-[47vh]">
+    <div className="card card-pie">
       <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100">
         Comparação Mensal
       </h3>
