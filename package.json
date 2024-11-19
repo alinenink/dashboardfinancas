@@ -6,8 +6,8 @@
     "dev": "next dev",
     "build": "next build && next export",
     "export": "next export",
-    "deploy": "npm run build && gh-pages -d out",
-    "lint": "next lint"
+    "lint": "next lint",
+      "deploy": "npm run build && rm -rf docs && mv out docs && git add . && git commit -m 'Deploy to GitHub Pages' && git push"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.1.2",
