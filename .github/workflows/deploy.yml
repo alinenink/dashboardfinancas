@@ -31,8 +31,7 @@ jobs:
           CI: true # Garante que o ambiente de CI seja respeitado pelo Next.js
         run: |
           npm run build
-          npm run export
-
+          
       # 5. Mover saída para docs
       - name: Move output to docs folder
         run: |
