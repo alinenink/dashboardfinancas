@@ -19,6 +19,10 @@
         "name": "next"
       }
     ],
+    "paths": {
+      "@/components/*": ["src/app/components/*"], // Cria um alias para componentes
+      "@/app/*": ["src/app/*"] // Cria um alias geral para "app"
+    }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
