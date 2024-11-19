@@ -3,7 +3,7 @@ import { AppProps } from "next/app";
 import 'styles/globals.css';
 import Header from "src/app/components/header";
 import { ThemeProvider } from "src/app/components/ThemeContext";
-import Sidebar from "@/components/Sidebar";
+import Sidebar from '../src/app/components/Sidebar';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
