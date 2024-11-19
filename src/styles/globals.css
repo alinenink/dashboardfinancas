@@ -115,7 +115,7 @@ body {
 }
 
 .header-title {
-  @apply text-lg font-bold ml-[22%];
+  @apply text-4xl mt-[-6vh] font-bold ml-[19.1%];
 }
 
 /* Botões */

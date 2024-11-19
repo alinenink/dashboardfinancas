@@ -2,21 +2,18 @@ import React from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
-  BarElement,
   CategoryScale,
   LinearScale,
+  BarElement,
   Tooltip,
-  Legend,
 } from "chart.js";
 
-// Registrando os elementos do Chart.js necessários
-ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip);
 
-// Definição do tipo das props
 interface MonthlyExpensesChartProps {
-  months: string[]; // Array de strings para os meses
-  categories: string[]; // Array de strings para as categorias
-  data: number[][]; // Array de arrays de números para os dados
+  months: string[];
+  categories: string[];
+  data: number[][];
 }
 
 const MonthlyExpensesChart: React.FC<MonthlyExpensesChartProps> = ({
@@ -24,68 +21,73 @@ const MonthlyExpensesChart: React.FC<MonthlyExpensesChartProps> = ({
   categories,
   data,
 }) => {
-  // Paleta de cores pastel para as categorias
-  const categoryColors = [
-    "#F8B4B4", // Alimentação (rosa pastel)
-    "#A3D9A5", // Transporte (verde pastel)
-    "#F9E79F", // Lazer (amarelo pastel)
-    "#AFCDEA", // Saúde (azul pastel)
-    "#C8A2C8", // Educação (roxo pastel)
+  const pastelColors = [
+    "#F8B4B4",
+    "#A3D9A5",
+    "#F9E79F",
+    "#AFCDEA",
+    "#C8A2C8",
   ];
 
-  // Preparar os dados para o gráfico de barras
+  const visibleMonths = months.slice(0, 3);
+  const visibleData = data.slice(0, 3);
+
   const chartData = {
-    labels: months, // Meses para a comparação (ex: ['Janeiro', 'Fevereiro', 'Março'])
+    labels: visibleMonths,
     datasets: categories.map((category, index) => ({
-      label: category, // Nome da categoria (ex: "Alimentação")
-      data: data[index], // Dados para cada categoria
-      backgroundColor: categoryColors[index % categoryColors.length], // Cor baseada na paleta pastel
-      borderColor: categoryColors[index % categoryColors.length],
+      label: category,
+      data: visibleData.map((month) => month[index]),
+      backgroundColor: pastelColors[index],
+      borderColor: pastelColors[index],
       borderWidth: 1,
     })),
   };
 
-  // Opções do gráfico
   const chartOptions = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
-      legend: {
-        position: "top" as const, // Define explicitamente como "top"
-        labels: {
-          font: {
-            size: 14,
-          },
-          color: "currentColor", // Ajusta cor automaticamente para Light/Dark
+      tooltip: {
+        callbacks: {
+          label: (context: any) => `R$ ${context.raw}`,
         },
+      },
+      legend: {
+        display: false,
       },
     },
     scales: {
-      x: {
-        ticks: {
-          color: "currentColor", // Ajusta cor das labels no eixo X automaticamente
-        },
-        grid: {
-          color: "rgba(255, 255, 255, 0.1)", // Cor do grid para Dark Mode
-        },
-      },
       y: {
         beginAtZero: true,
-        ticks: {
-          color: "currentColor", // Ajusta cor das labels no eixo Y automaticamente
-        },
-        grid: {
-          color: "rgba(255, 255, 255, 0.1)", // Cor do grid para Dark Mode
-        },
       },
     },
   };
 
   return (
-    <div className="card card-pie">
-      <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100">
+    <div className="flex flex-col p-4 bg-white shadow-md rounded-lg h-[36vh]">
+      <h3 className="text-lg font-bold mb-4 text-left text-gray-800 dark:text-gray-100">
         Comparação Mensal
       </h3>
-      <Bar data={chartData} options={chartOptions} width={500} height={200} />
+
+      <div className="flex-grow">
+        <Bar data={chartData} options={chartOptions} />
+      </div>
+
+      <div className="flex flex-wrap justify-center gap-3 mt-3">
+        {categories.map((category, index) => (
+          <div key={category} className="flex items-center">
+            <div
+              className="w-4 h-4 rounded-full mr-2"
+              style={{
+                backgroundColor: pastelColors[index],
+              }}
+            ></div>
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              {category}
+            </span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

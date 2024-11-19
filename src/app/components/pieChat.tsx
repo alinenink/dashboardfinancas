@@ -4,42 +4,38 @@ import {
   Chart as ChartJS,
   ArcElement,
   Tooltip,
-  Legend,
 } from "chart.js";
 
-// Registrando os elementos do Chart.js necessários
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(ArcElement, Tooltip);
 
-// Definição dos tipos das props
 interface ExpenseDataItem {
-  label: string; // Nome da categoria
-  value: number; // Valor correspondente
+  label: string;
+  value: number;
 }
 
 interface ExpenseCardProps {
-  title: string; // Título do card
-  data: ExpenseDataItem[]; // Dados do gráfico
+  title: string;
+  data: ExpenseDataItem[];
 }
 
 const ExpenseCard: React.FC<ExpenseCardProps> = ({ title, data }) => {
-  // Paleta de cores pastel
+  const total = data.reduce((sum, item) => sum + item.value, 0);
+
   const pastelColors = [
-    "#F8B4B4", // Rosa pastel
-    "#A3D9A5", // Verde pastel
-    "#F9E79F", // Amarelo pastel
-    "#AFCDEA", // Azul pastel
-    "#C8A2C8", // Roxo pastel
+    "#F8B4B4",
+    "#A3D9A5",
+    "#F9E79F",
+    "#AFCDEA",
+    "#C8A2C8",
   ];
 
-  // Preparar os dados para o gráfico de doughnut
   const chartData = {
-    labels: data.map((item) => item.label), // Exemplo: ['Alimentação', 'Transporte', 'Lazer']
+    labels: data.map((item) => item.label),
     datasets: [
       {
-        label: "Gastos Principais",
-        data: data.map((item) => item.value), // Exemplo: [200, 100, 50]
-        backgroundColor: pastelColors.slice(0, data.length), // Garante que cada item tenha uma cor
-        borderColor: pastelColors.slice(0, data.length), // Bordas pastel
+        data: data.map((item) => item.value),
+        backgroundColor: pastelColors.slice(0, data.length),
+        borderColor: pastelColors.slice(0, data.length),
         borderWidth: 1,
       },
     ],
@@ -47,27 +43,61 @@ const ExpenseCard: React.FC<ExpenseCardProps> = ({ title, data }) => {
 
   const chartOptions = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
-      legend: {
-        position: "top" as const, // Define explicitamente a posição
-        labels: {
-          font: {
-            size: 14,
+      tooltip: {
+        callbacks: {
+          label: (context: any) => {
+            const percentage = (
+              (context.raw / total) *
+              100
+            ).toFixed(2);
+            return `${context.label}: R$ ${context.raw} (${percentage}%)`;
           },
-          color: "currentColor", // Ajusta cor automaticamente para Light/Dark
         },
       },
+      legend: {
+        display: false,
+      },
     },
-    cutout: "70%", // Tamanho do furo no meio
+    cutout: "70%",
   };
 
   return (
-    <div className="card card-pie flex flex-col items-center justify-center text-center h-[47vh]">
-      <h3 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100">
+    <div className="flex flex-col p-4 bg-white shadow-md rounded-lg h-[36vh]">
+      {/* Título do card */}
+      <h3 className="text-lg font-bold mb-4 text-left text-gray-800 dark:text-gray-100">
         {title}
       </h3>
-      <div className="flex justify-center w-full">
-        <Doughnut data={chartData} options={chartOptions} />
+
+      {/* Conteúdo do card: gráfico e legendas */}
+      <div className="flex items-center justify-between h-full">
+        {/* Gráfico */}
+        <div className="w-1/2 h-full flex justify-center items-center">
+          <div className="w-[80%] h-[80%]">
+            <Doughnut data={chartData} options={chartOptions} />
+          </div>
+        </div>
+
+        {/* Legendas */}
+        <div className="w-1/2 flex flex-col justify-center gap-2">
+          {data.map((item, index) => {
+            const percentage = ((item.value / total) * 100).toFixed(2);
+            return (
+              <div key={item.label} className="flex items-center">
+                <div
+                  className="w-4 h-4 rounded-full mr-2"
+                  style={{
+                    backgroundColor: pastelColors[index],
+                  }}
+                ></div>
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {item.label}: {percentage}%
+                </span>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

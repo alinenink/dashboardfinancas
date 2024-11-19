@@ -1,28 +1,26 @@
 import React from "react";
-import { Line } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
-  Title,
+  BarElement,
   Tooltip,
 } from "chart.js";
 
 // Registrar os elementos do Chart.js necessários
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip);
 
-interface MonthlyExpensesLineChartProps {
-  months: string[];
-  categories: string[];
-  data: number[][];
+interface TopExpensesChartProps {
+  expenses: { category: string; amount: number }[];
+  highestExpense: { category: string; amount: number };
+  increasePercentage: number;
 }
 
-const MonthlyExpensesLineChart: React.FC<MonthlyExpensesLineChartProps> = ({
-  months,
-  categories,
-  data,
+const TopExpensesChart: React.FC<TopExpensesChartProps> = ({
+  expenses,
+  highestExpense,
+  increasePercentage,
 }) => {
   // Paleta de cores pastel padronizada
   const pastelColors = [
@@ -33,22 +31,18 @@ const MonthlyExpensesLineChart: React.FC<MonthlyExpensesLineChartProps> = ({
     "#C8A2C8", // Roxo pastel
   ];
 
-  // Limitar para os três primeiros meses
-  const visibleMonths = months.slice(0, 3);
-  const visibleData = data.slice(0, 3);
-
   // Dados do gráfico
   const chartData = {
-    labels: visibleMonths,
-    datasets: categories.map((category, index) => ({
-      label: category,
-      data: visibleData.map((month) => month[index]),
-      borderColor: pastelColors[index],
-      backgroundColor: pastelColors[index],
-      borderWidth: 2,
-      pointRadius: 5,
-      pointBackgroundColor: pastelColors[index],
-    })),
+    labels: expenses.map((expense) => expense.category),
+    datasets: [
+      {
+        label: "Gastos",
+        data: expenses.map((expense) => expense.amount),
+        backgroundColor: pastelColors.slice(0, expenses.length),
+        borderColor: pastelColors.slice(0, expenses.length),
+        borderWidth: 1,
+      },
+    ],
   };
 
   const chartOptions = {
@@ -75,18 +69,18 @@ const MonthlyExpensesLineChart: React.FC<MonthlyExpensesLineChartProps> = ({
     <div className="flex flex-col p-4 bg-white shadow-md rounded-lg h-[36vh]">
       {/* Título do card */}
       <h3 className="text-lg font-bold mb-4 text-left text-gray-800 dark:text-gray-100">
-        Comparação Mensal de Gastos
+        Top 5 Gastos do Mês
       </h3>
 
       {/* Gráfico */}
       <div className="flex-grow">
-        <Line data={chartData} options={chartOptions} />
+        <Bar data={chartData} options={chartOptions} />
       </div>
 
       {/* Legendas personalizadas */}
       <div className="flex flex-wrap justify-center gap-3 mt-3">
-        {categories.map((category, index) => (
-          <div key={category} className="flex items-center">
+        {expenses.map((expense, index) => (
+          <div key={expense.category} className="flex items-center">
             <div
               className="w-4 h-4 rounded-full mr-2"
               style={{
@@ -94,13 +88,26 @@ const MonthlyExpensesLineChart: React.FC<MonthlyExpensesLineChartProps> = ({
               }}
             ></div>
             <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              {category}
+              {expense.category}
             </span>
           </div>
         ))}
+      </div>
+
+      {/* Insights */}
+      <div className="mt-4">
+        <div className="bg-blue-100 text-blue-800 p-2 rounded-md mb-2">
+          <strong>Maior Gasto:</strong> {highestExpense.category}: R${" "}
+          {highestExpense.amount.toFixed(2)}
+        </div>
+        <div className="bg-green-100 text-green-800 p-2 rounded-md">
+          <strong>Aumento Total em Relação ao Mês Anterior:</strong> O total dos
+          gastos aumentou em {increasePercentage.toFixed(2)}% em comparação ao
+          mês anterior.
+        </div>
       </div>
     </div>
   );
 };
 
-export default MonthlyExpensesLineChart;
+export default TopExpensesChart;

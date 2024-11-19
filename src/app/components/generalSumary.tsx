@@ -1,38 +1,69 @@
-import Card from "./card";
+import React from "react";
+import { AiOutlineDollar, AiOutlineCreditCard, AiOutlineBank } from "react-icons/ai";
+
+interface SummaryCardProps {
+  title: string;
+  value: number;
+  percentage: number;
+  icon: React.ReactNode;
+  iconColor: string;
+}
+
+const SummaryCard: React.FC<SummaryCardProps> = ({
+  title,
+  value,
+  percentage,
+  icon,
+  iconColor,
+}) => {
+  return (
+    <div className="flex items-center p-3 bg-white shadow-md rounded-lg h-[8vh]">
+      {/* Ícone colorido */}
+      <div
+        className="flex items-center justify-center text-3xl"
+        style={{ color: iconColor }}
+      >
+        {icon}
+      </div>
+
+      {/* Informações */}
+      <div className="ml-4">
+        <h3 className="text-sm font-semibold text-gray-600">{title}</h3>
+        <p className="text-lg font-bold text-gray-800">R$ {value.toFixed(2)}</p>
+        <span className="text-xs text-gray-500">{percentage}% do total</span>
+      </div>
+    </div>
+  );
+};
 
 const GeneralSummary = () => {
-  const summaryData = [
-    {
-      title: "Renda Mensal",
-      value: "R$ 5.000",
-      percentage: "40% do total",
-      color: "text-blue-400", // Azul pastel
-    },
-    {
-      title: "Despesas Totais",
-      value: "R$ 3.000",
-      percentage: "60% do total",
-      color: "text-red-400", // Vermelho pastel
-    },
-    {
-      title: "Saldo Restante",
-      value: "R$ 2.000",
-      percentage: "40% do total",
-      color: "text-green-400", // Verde pastel
-    },
-  ];
+  const totalIncome = 5000; // Renda Mensal
+  const totalExpenses = 3000; // Despesas Totais
+  const remainingBalance = totalIncome - totalExpenses; // Saldo Restante
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 ">
-      {summaryData.map((data, index) => (
-        <Card
-          key={index}
-          title={data.title}
-          value={data.value}
-          percentage={data.percentage}
-          color={data.color}
-        />
-      ))}
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <SummaryCard
+        title="Renda Mensal"
+        value={totalIncome}
+        percentage={(totalIncome / totalIncome) * 100}
+        icon={<AiOutlineDollar />}
+        iconColor="#F5A623" // Laranja
+      />
+      <SummaryCard
+        title="Despesas Totais"
+        value={totalExpenses}
+        percentage={(totalExpenses / totalIncome) * 100}
+        icon={<AiOutlineCreditCard />}
+        iconColor="#E94E77" // Vermelho
+      />
+      <SummaryCard
+        title="Saldo Restante"
+        value={remainingBalance}
+        percentage={(remainingBalance / totalIncome) * 100}
+        icon={<AiOutlineBank />}
+        iconColor="#4A90E2" // Azul
+      />
     </div>
   );
 };

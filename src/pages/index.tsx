@@ -5,7 +5,9 @@ const Home = () => {
   const router = useRouter();
 
   useEffect(() => {
-    router.push("/dashboard");
+    if (router.pathname === "/") {
+      router.push("/dashboard");
+    }
   }, [router]);
 
   return null;
