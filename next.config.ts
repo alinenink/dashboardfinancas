@@ -1,10 +1,11 @@
-
+/** @type {import('next').NextConfig} */
 const isGithubPages = process.env.NODE_ENV === 'production';
+const repo = '/alineninkfinancas.github.io';
 
-const repo = isGithubPages ? '/alineninkfinancas.github.io' : '';
-
-module.exports = {
+const nextConfig = {
   output: 'export',
-  basePath: repo, 
-  assetPrefix: repo,
+  basePath: isGithubPages ? repo : '',
+  assetPrefix: isGithubPages ? repo : '',
 };
+
+module.exports = nextConfig;
