@@ -1,7 +1,31 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { AiOutlineDashboard, AiOutlineSetting } from "react-icons/ai";
+
+// Mock data for the months and categories (you can replace them with dynamic data)
+const months = [
+  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", 
+  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+];
+const categories = ["Alimentação", "Transporte", "Saúde", "Lazer", "Educação"];
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedMonth, setSelectedMonth] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [periodType, setPeriodType] = useState("Ultimo Mês");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+
+  const handleFilter = () => {
+    // Logic to filter based on selected options
+    console.log({
+      selectedMonth,
+      selectedCategory,
+      periodType,
+      startDate,
+      endDate
+    });
+  };
 
   return (
     <>
@@ -19,18 +43,102 @@ const Sidebar = () => {
           isOpen ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"
         } md:relative md:translate-x-0 md:opacity-100 md:w-[15%]`}
       >
-        {/* Conteúdo da Sidebar */}
-        <nav className="space-y-6 pt-20 md:pt-8 px-6">
-          <a href="#" className="sidebar-link">
+        {/* Logo no topo */}
+        <div className="flex justify-center mt-[10rem] mb-8">
+          <img
+            src="/logo.png" // Logo do dashboard
+            alt="Logo"
+            className="w-[11rem] h-[10rem] rounded-full"
+          />
+        </div>
+
+        {/* Bloco das opções */}
+        <nav className="space-y-6 pt-18 md:pt-16 px-6 mb-[7rem]">
+          <a href="#" className="flex items-center text-lg font-bold text-gray-700 dark:text-gray-100">
+            <AiOutlineDashboard className="mr-2" />
             Visão Geral
           </a>
-          <a href="#" className="sidebar-link">
-            Relatórios
-          </a>
-          <a href="#" className="sidebar-link">
+          <a href="#" className="flex items-center text-lg font-bold text-gray-700 dark:text-gray-100">
+            <AiOutlineSetting className="mr-2" />
             Configurações
           </a>
         </nav>
+
+        {/* Filtros */}
+        <div className="px-6 mt-6 space-y-4">
+          {/* Filtro: Período Fixo */}
+          <div>
+            <label htmlFor="periodo-fixo" className="text-sm font-bold dark:text-gray-200">Período Fixo</label>
+            <select
+              id="periodo-fixo"
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(e.target.value)}
+              className="w-full mt-2 p-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300"
+            >
+              <option value="">Selecione o mês</option>
+              {months.map((month) => (
+                <option key={month} value={month}>{month}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Filtro: Tipo de Gasto */}
+          <div>
+            <label htmlFor="tipo-gasto" className="text-sm font-bold dark:text-gray-200">Tipo de Gasto</label>
+            <select
+              id="tipo-gasto"
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="w-full mt-2 p-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300"
+            >
+              <option value="">Selecione o tipo de gasto</option>
+              {categories.map((category) => (
+                <option key={category} value={category}>{category}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Filtro: Período Personalizado */}
+          <div>
+            <label htmlFor="periodo-personalizado" className="text-sm font-bold dark:text-gray-200">Período Personalizado</label>
+            <select
+              id="periodo-personalizado"
+              value={periodType}
+              onChange={(e) => setPeriodType(e.target.value)}
+              className="w-full mt-2 p-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300"
+            >
+              <option value="Ultimo Mês">Último Mês</option>
+              <option value="Ultimos 3 meses">Últimos 3 meses</option>
+              <option value="Personalizado">Personalizado</option>
+            </select>
+            {periodType === "Personalizado" && (
+              <div className="mt-2 flex gap-4">
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  className="p-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300"
+                />
+                <input
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  className="p-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300"
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Botão de filtro */}
+          <div className="mt-4 text-center">
+            <button
+              onClick={handleFilter}
+              className="bg-blue-500 text-white px-4 py-2 rounded-md w-full"
+            >
+              Filtrar
+            </button>
+          </div>
+        </div>
       </aside>
 
       {/* Overlay para fechar no mobile */}
