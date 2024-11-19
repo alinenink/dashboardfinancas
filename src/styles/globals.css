@@ -16,6 +16,11 @@ html {
   --text-color: #1a202c; /* Texto escuro */
 }
 
+html {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+
 body {
   background-color: var(--bg-color);
   color: var(--text-color);

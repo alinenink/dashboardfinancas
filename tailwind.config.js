@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: "class", // Suporte a tema escuro/claro com classes
+  darkMode: "class",
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx}",
     "./src/components/**/*.{js,ts,jsx,tsx}",
@@ -16,7 +16,7 @@ module.exports = {
         sans: ["GeistMonoVF", "sans-serif"], // Nome das suas fontes
       },
       spacing: {
-        '3rem': '3rem', // Adiciona 3rem como um valor de espaçamento personalizado
+        "3rem": "3rem", // Adiciona 3rem como um valor de espaçamento personalizado
       },
     },
   },
