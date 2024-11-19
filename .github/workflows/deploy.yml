@@ -18,27 +18,24 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18 # Escolha a versão que o projeto usa
+          node-version: 18
           cache: 'npm'
 
       # 3. Instalação de dependências
       - name: Install dependencies
         run: npm install
 
-      # 4. Build e exportação
-      - name: Build and export
-        env: 
-          CI: true # Garante que o ambiente de CI seja respeitado pelo Next.js
-        run: |
-          npm run build
-          
-      # 5. Mover saída para docs
+      # 4. Build do projeto
+      - name: Build the application
+        run: npm run build
+
+      # 5. Mover saída para a pasta docs
       - name: Move output to docs folder
         run: |
           rm -rf docs
           mv out docs
 
-      # 6. Configurar Git e enviar para o repositório
+      # 6. Commit e push para o repositório
       - name: Commit and push changes
         run: |
           git config user.name "github-actions[bot]"
