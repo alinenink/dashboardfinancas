@@ -7,6 +7,7 @@ import {
   BarElement,
   Tooltip,
 } from "chart.js";
+import { useTheme } from "./ThemeContext";
 
 // Registrar os elementos do Chart.js necessários
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip);
@@ -22,6 +23,8 @@ const TopExpensesChart: React.FC<TopExpensesChartProps> = ({
   highestExpense,
   increasePercentage,
 }) => {
+  const { isDarkMode } = useTheme();
+
   // Paleta de cores pastel padronizada
   const pastelColors = [
     "#F8B4B4", // Rosa pastel
@@ -45,6 +48,7 @@ const TopExpensesChart: React.FC<TopExpensesChartProps> = ({
     ],
   };
 
+  // Opções do gráfico
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -59,14 +63,29 @@ const TopExpensesChart: React.FC<TopExpensesChartProps> = ({
       },
     },
     scales: {
+      x: {
+        ticks: {
+          color: isDarkMode ? "#f3f4f6" : "#1f2937", // Branco no escuro, preto no claro
+          font: { size: 12 },
+        },
+        grid: {
+          color: isDarkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)",
+        },
+      },
       y: {
-        beginAtZero: true,
+        ticks: {
+          color: isDarkMode ? "#f3f4f6" : "#1f2937", // Branco no escuro, preto no claro
+          font: { size: 12 },
+        },
+        grid: {
+          color: isDarkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)",
+        },
       },
     },
   };
 
   return (
-    <div className="flex flex-col p-4 bg-white shadow-md rounded-lg h-[36vh]">
+    <div className="flex flex-col p-4 bg-white dark:bg-gray-800 shadow-md rounded-lg h-[36vh]">
       {/* Título do card */}
       <h3 className="text-lg font-bold mb-4 text-left text-gray-800 dark:text-gray-100">
         Top 5 Gastos do Mês
@@ -96,11 +115,11 @@ const TopExpensesChart: React.FC<TopExpensesChartProps> = ({
 
       {/* Insights */}
       <div className="mt-4">
-        <div className="bg-blue-100 text-blue-800 p-2 rounded-md mb-2">
+        <div className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-300 p-2 rounded-md mb-2">
           <strong>Maior Gasto:</strong> {highestExpense.category}: R${" "}
           {highestExpense.amount.toFixed(2)}
         </div>
-        <div className="bg-green-100 text-green-800 p-2 rounded-md">
+        <div className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300 p-2 rounded-md">
           <strong>Aumento Total em Relação ao Mês Anterior:</strong> O total dos
           gastos aumentou em {increasePercentage.toFixed(2)}% em comparação ao
           mês anterior.

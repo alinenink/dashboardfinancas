@@ -1,8 +1,10 @@
+import React from "react";
+import { useTheme } from "@/app/components/ThemeContext";
+
 export default function Header() {
-  const toggleTheme = () => {
-    const html = document.documentElement;
-    html.classList.toggle("dark");
-  };
+  const { isDarkMode, toggleTheme } = useTheme();
+
+  console.log("Tema atual: ", isDarkMode ? "Escuro" : "Claro");
 
   return (
     <header className="header">

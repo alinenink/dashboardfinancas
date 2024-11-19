@@ -9,6 +9,7 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
+import { useTheme } from "@/app/components/ThemeContext"; // Adicionando o import para o ThemeContext
 
 // Registrar os elementos do Chart.js necessários
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip);
@@ -19,6 +20,8 @@ interface ProjectionChartProps {
 }
 
 const ProjectionChart: React.FC<ProjectionChartProps> = ({ months, actualExpenses }) => {
+  const { isDarkMode } = useTheme(); // Obtendo o estado do tema
+
   // Calcular a média de gastos reais
   const average = actualExpenses.reduce((sum, val) => sum + val, 0) / actualExpenses.length;
 
@@ -40,7 +43,7 @@ const ProjectionChart: React.FC<ProjectionChartProps> = ({ months, actualExpense
         borderWidth: 2,
         pointRadius: 5,
         pointBackgroundColor: "#A3D9A5",
-        tension: 0.3, // Suavizar a linha
+        tension: 0.3,
       },
       {
         label: "Projeção de Gastos",
@@ -50,12 +53,13 @@ const ProjectionChart: React.FC<ProjectionChartProps> = ({ months, actualExpense
         borderWidth: 2,
         pointRadius: 5,
         pointBackgroundColor: "#F8B4B4",
-        borderDash: [5, 5], // Linhas tracejadas
+        borderDash: [5, 5],
         tension: 0.3,
       },
     ],
   };
 
+  // Opções de configuração para o gráfico com base no tema
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -66,29 +70,41 @@ const ProjectionChart: React.FC<ProjectionChartProps> = ({ months, actualExpense
         },
       },
       legend: {
-        display: false, // Remove a legenda padrão
+        display: false,
       },
     },
     scales: {
+      x: {
+        ticks: {
+          color: isDarkMode ? "#f3f4f6" : "#1f2937", // Branco no escuro, preto no claro
+          font: { size: 12 },
+        },
+        grid: {
+          color: isDarkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)",
+        },
+      },
       y: {
-        beginAtZero: true,
+        ticks: {
+          color: isDarkMode ? "#f3f4f6" : "#1f2937", // Branco no escuro, preto no claro
+          font: { size: 12 },
+        },
+        grid: {
+          color: isDarkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)",
+        },
       },
     },
   };
 
   return (
-    <div className="flex flex-col p-4 bg-white shadow-md rounded-lg h-[36vh]">
-      {/* Título do card */}
+    <div className="flex flex-col p-4 bg-white dark:bg-gray-800 shadow-md rounded-lg h-[36vh]">
       <h3 className="text-lg font-bold mb-4 text-left text-gray-800 dark:text-gray-100">
         Projeção de Gastos
       </h3>
 
-      {/* Gráfico */}
       <div className="flex-grow">
         <Line data={chartData} options={chartOptions} />
       </div>
 
-      {/* Legendas personalizadas */}
       <div className="flex flex-wrap justify-center gap-3 mt-3">
         <div className="flex items-center">
           <div
@@ -110,8 +126,7 @@ const ProjectionChart: React.FC<ProjectionChartProps> = ({ months, actualExpense
         </div>
       </div>
 
-      {/* Média de gastos */}
-      <div className="mt-4 text-sm text-gray-700">
+      <div className="mt-4 text-sm text-gray-700 dark:text-gray-300">
         Com base nos gastos passados, a média mensal de despesas é de R${" "}
         {average.toFixed(2)}.
       </div>

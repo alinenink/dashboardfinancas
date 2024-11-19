@@ -17,7 +17,6 @@ const FixedVsVariableExpenses: React.FC<FixedVsVariableExpensesProps> = ({
   fixed,
   variable,
 }) => {
-  // Dados do gráfico
   const chartData = {
     labels: ["Gastos Fixos", "Gastos Variáveis"],
     datasets: [
@@ -41,13 +40,13 @@ const FixedVsVariableExpenses: React.FC<FixedVsVariableExpensesProps> = ({
         },
       },
       legend: {
-        display: false, // Remove a legenda padrão
+        display: false,
       },
     },
   };
 
   return (
-    <div className="flex flex-col p-4 bg-white shadow-md rounded-lg h-[36vh]">
+    <div className="flex flex-col p-4 bg-white dark:bg-gray-800 shadow-md rounded-lg h-[36vh]">
       {/* Título do card */}
       <h3 className="text-lg font-bold mb-4 text-left text-gray-800 dark:text-gray-100">
         Gastos Fixos vs Variáveis
@@ -55,7 +54,7 @@ const FixedVsVariableExpenses: React.FC<FixedVsVariableExpensesProps> = ({
 
       {/* Gráfico */}
       <div className="flex-grow flex justify-center items-center">
-        <div className="w-[80%] h-[80%]">
+        <div className="w-[70%] h-[70%]">
           <Pie data={chartData} options={chartOptions} />
         </div>
       </div>
@@ -84,10 +83,10 @@ const FixedVsVariableExpenses: React.FC<FixedVsVariableExpensesProps> = ({
 
       {/* Insights */}
       <div className="mt-4">
-        <div className="text-sm text-gray-700">
+        <div className="text-sm font-medium text-gray-800 dark:text-gray-100">
           <strong>Gastos Fixos:</strong> R$ {fixed.toFixed(2)}
         </div>
-        <div className="text-sm text-gray-700">
+        <div className="text-sm font-medium text-gray-800 dark:text-gray-100">
           <strong>Gastos Variáveis:</strong> R$ {variable.toFixed(2)}
         </div>
       </div>

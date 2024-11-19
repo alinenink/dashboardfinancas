@@ -2,24 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Tema padrão e dark */
-html {
-  @apply font-sans;
-}
-
 html.light {
   @apply bg-gray-50 text-gray-800; /* Fundo claro pastel */
 }
 
 html.dark {
-  @apply bg-gray-900 text-gray-100; /* Fundo escuro */
+  --bg-color: #1a202c; /* Fundo escuro */
+  --text-color: #f3f4f6; /* Texto claro */
 }
 
-/* Corpo geral */
+html {
+  --bg-color: #ffffff; /* Fundo claro */
+  --text-color: #1a202c; /* Texto escuro */
+}
+
 body {
-  @apply bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100;
+  background-color: var(--bg-color);
+  color: var(--text-color);
 }
-
 /* Layout geral */
 .main-layout {
   @apply min-h-screen flex flex-col;

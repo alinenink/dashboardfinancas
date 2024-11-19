@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -9,8 +9,8 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
+import { useTheme } from "@/app/components/ThemeContext";
 
-// Registrar os elementos do Chart.js necessários
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip);
 
 interface MonthlyExpensesLineChartProps {
@@ -19,25 +19,64 @@ interface MonthlyExpensesLineChartProps {
   data: number[][];
 }
 
+const pastelColors = [
+  "#F8B4B4",
+  "#A3D9A5",
+  "#F9E79F",
+  "#AFCDEA",
+  "#C8A2C8",
+];
+
 const MonthlyExpensesLineChart: React.FC<MonthlyExpensesLineChartProps> = ({
   months,
   categories,
   data,
 }) => {
-  // Paleta de cores pastel padronizada
-  const pastelColors = [
-    "#F8B4B4", // Rosa pastel
-    "#A3D9A5", // Verde pastel
-    "#F9E79F", // Amarelo pastel
-    "#AFCDEA", // Azul pastel
-    "#C8A2C8", // Roxo pastel
-  ];
+  const { isDarkMode } = useTheme();
+  const [chartOptions, setChartOptions] = useState<any>({});
 
-  // Limitar para os três primeiros meses
+  useEffect(() => {
+    const options = {
+      responsive: true,
+      maintainAspectRatio: true, // Mantém o gráfico dentro do card
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: (context: any) => `R$ ${context.raw}`,
+          },
+        },
+        legend: {
+          display: false,
+        },
+      },
+      scales: {
+        x: {
+          ticks: {
+            color: isDarkMode ? "#f3f4f6" : "#1f2937",
+            font: { size: 12 },
+          },
+          grid: {
+            color: isDarkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)",
+          },
+        },
+        y: {
+          ticks: {
+            color: isDarkMode ? "#f3f4f6" : "#1f2937",
+            font: { size: 12 },
+          },
+          grid: {
+            color: isDarkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)",
+          },
+        },
+      },
+    };
+
+    setChartOptions(options);
+  }, [isDarkMode]);
+
   const visibleMonths = months.slice(0, 3);
   const visibleData = data.slice(0, 3);
 
-  // Dados do gráfico
   const chartData = {
     labels: visibleMonths,
     datasets: categories.map((category, index) => ({
@@ -51,39 +90,16 @@ const MonthlyExpensesLineChart: React.FC<MonthlyExpensesLineChartProps> = ({
     })),
   };
 
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      tooltip: {
-        callbacks: {
-          label: (context: any) => `R$ ${context.raw}`,
-        },
-      },
-      legend: {
-        display: false, // Remove a legenda padrão
-      },
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-      },
-    },
-  };
-
   return (
-    <div className="flex flex-col p-4 bg-white shadow-md rounded-lg h-[36vh]">
-      {/* Título do card */}
+    <div className="flex flex-col p-4 bg-white dark:bg-gray-800 shadow-md rounded-lg h-[36vh] overflow-hidden">
       <h3 className="text-lg font-bold mb-4 text-left text-gray-800 dark:text-gray-100">
         Comparação Mensal de Gastos
       </h3>
 
-      {/* Gráfico */}
-      <div className="flex-grow">
+      <div className="flex-grow overflow-hidden">
         <Line data={chartData} options={chartOptions} />
       </div>
 
-      {/* Legendas personalizadas */}
       <div className="flex flex-wrap justify-center gap-3 mt-3">
         {categories.map((category, index) => (
           <div key={category} className="flex items-center">

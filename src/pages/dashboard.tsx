@@ -1,12 +1,12 @@
-import MonthlyExpensesChart from "@/app/components/barChart";
-import MonthlyExpensesLineChart from "@/app/components/expenseList";
-import FixedVsVariableExpenses from "@/app/components/fixedVsVariableChart";
-import FixedVsVariableChart from "@/app/components/fixedVsVariableChart";
-import GeneralSummary from "@/app/components/generalSumary";
-import ExpenseCard from "@/app/components/pieChat";
-import ProjectionChart from "@/app/components/spendingProjectionChart";
-import SpendingProjectionChart from "@/app/components/spendingProjectionChart";
-import TopExpensesChart from "@/app/components/topExpenses";
+import MonthlyExpensesChart from "@/app/components/MonthlyExpensesChart";
+import MonthlyExpensesLineChart from "@/app/components/MonthlyExpensesLineChart";
+import FixedVsVariableExpenses from "@/app/components/FixedVsVariableExpenses";
+import FixedVsVariableChart from "@/app/components/FixedVsVariableExpenses";
+import GeneralSummary from "@/app/components/GeneralSummary";
+import ExpenseCard from "@/app/components/ExpenseCard";
+import ProjectionChart from "@/app/components/ProjectionChart";
+import SpendingProjectionChart from "@/app/components/ProjectionChart";
+import TopExpensesChart from "@/app/components/TopExpensesChart";
 
 const expenseData = [
   { label: "Alimentação", value: 1200 },
@@ -26,11 +26,11 @@ const data = [
 ];
 
 const expenses = [
-  { category: "Aluguel", amount: 1200 },
-  { category: "Supermercado", amount: 600 },
-  { category: "Saúde", amount: 400 },
-  { category: "Transporte", amount: 300 },
-  { category: "Lazer", amount: 200 },
+  { category: "Alimentação", amount: 1200 },
+  { category: "Transporte", amount: 600 },
+  { category: "Lazer", amount: 400 },
+  { category: "Saúde", amount: 300 },
+  { category: "Educação", amount: 200 },
 ];
 
 const highestExpense = { category: "Aluguel", amount: 1200 };
@@ -43,7 +43,7 @@ const actualExpenses = [1200, 1300, 1250, 1350, 1400]; // Gastos reais
 
 const Dashboard = () => {
   return (
-    <div className="p-6 card-container h-screen overflow-y-scroll bg-gray-100 dark:bg-gray-900">
+    <div className="p-6 card-container h-screen overflow-y-scroll">
       {/* Resumo geral */}
       <GeneralSummary />
       <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">

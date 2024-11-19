@@ -1,19 +1,20 @@
 import "@/styles/globals.css";
-import Header from "@/app/components/header";
-import Sidebar from "@/app/components/sidebar";
+import Header from "@/app/components/Header";
+import Sidebar from "@/app/components/Sidebar";
 import type { AppProps } from "next/app";
+import { ThemeProvider } from "@/app/components/ThemeContext";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <div className="main-layout">
-      <Header />
+    <ThemeProvider>
+      <div className="main-layout">
+        <Header />
 
-      <div className="content-layout">
-        <Sidebar />
-        <main className="main-content">
+        <div className="content-layout">
+          <Sidebar />
           <Component {...pageProps} />
-        </main>
+        </div>
       </div>
-    </div>
+    </ThemeProvider>
   );
 }

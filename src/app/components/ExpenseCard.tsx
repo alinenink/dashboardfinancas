@@ -22,11 +22,11 @@ const ExpenseCard: React.FC<ExpenseCardProps> = ({ title, data }) => {
   const total = data.reduce((sum, item) => sum + item.value, 0);
 
   const pastelColors = [
-    "#F8B4B4",
-    "#A3D9A5",
-    "#F9E79F",
-    "#AFCDEA",
-    "#C8A2C8",
+    "#F8B4B4", // Rosa pastel
+    "#A3D9A5", // Verde pastel
+    "#F9E79F", // Amarelo pastel
+    "#AFCDEA", // Azul pastel
+    "#C8A2C8", // Roxo pastel
   ];
 
   const chartData = {
@@ -57,14 +57,14 @@ const ExpenseCard: React.FC<ExpenseCardProps> = ({ title, data }) => {
         },
       },
       legend: {
-        display: false,
+        display: false, // Legendas personalizadas serão usadas
       },
     },
-    cutout: "70%",
+    cutout: "70%", // Gráfico de Doughnut com centro maior
   };
 
   return (
-    <div className="flex flex-col p-4 bg-white shadow-md rounded-lg h-[36vh]">
+    <div className="flex flex-col p-4 bg-white dark:bg-gray-800 shadow-md rounded-lg h-[36vh]">
       {/* Título do card */}
       <h3 className="text-lg font-bold mb-4 text-left text-gray-800 dark:text-gray-100">
         {title}

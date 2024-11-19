@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -7,6 +7,7 @@ import {
   BarElement,
   Tooltip,
 } from "chart.js";
+import { useTheme } from "./ThemeContext";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip);
 
@@ -21,6 +22,46 @@ const MonthlyExpensesChart: React.FC<MonthlyExpensesChartProps> = ({
   categories,
   data,
 }) => {
+  const { isDarkMode } = useTheme();
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: (context: any) => `R$ ${context.raw}`,
+        },
+      },
+      legend: {
+        labels: {
+          color: isDarkMode ? "#f3f4f6" : "#1f2937",
+        },
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: isDarkMode ? "#f3f4f6" : "#1f2937",
+          font: { size: 12 },
+        },
+        grid: {
+          color: isDarkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)",
+        },
+      },
+      y: {
+        ticks: {
+          color: isDarkMode ? "#f3f4f6" : "#1f2937",
+          font: { size: 12 },
+        },
+        grid: {
+          color: isDarkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)",
+        },
+      },
+    },
+  };
+
+  // Configuração dos dados do gráfico
   const pastelColors = [
     "#F8B4B4",
     "#A3D9A5",
@@ -43,28 +84,8 @@ const MonthlyExpensesChart: React.FC<MonthlyExpensesChartProps> = ({
     })),
   };
 
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      tooltip: {
-        callbacks: {
-          label: (context: any) => `R$ ${context.raw}`,
-        },
-      },
-      legend: {
-        display: false,
-      },
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-      },
-    },
-  };
-
   return (
-    <div className="flex flex-col p-4 bg-white shadow-md rounded-lg h-[36vh]">
+    <div className="flex flex-col p-4 bg-white dark:bg-gray-800 shadow-md rounded-lg h-[36vh]">
       <h3 className="text-lg font-bold mb-4 text-left text-gray-800 dark:text-gray-100">
         Comparação Mensal
       </h3>
