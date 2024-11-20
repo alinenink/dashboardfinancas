@@ -2,12 +2,12 @@
 const isProduction = process.env.NODE_ENV === "production";
 
 module.exports = {
-  output: 'export', // Configuração obrigatória para exportação estática
-  distDir: 'out',
-  basePath: isProduction ? "/alineninkfinancas.github.io" : "",
-  assetPrefix: isProduction ? "/alineninkfinancas.github.io" : "",
-  trailingSlash: true,
+  output: 'export',
+  distDir: 'out', // Diretório de saída para build
+  basePath: isProduction ? "/alineninkfinancas.github.io/docs" : "/out",
+  assetPrefix: isProduction ? "/alineninkfinancas.github.io/docs" : "/out",
+  trailingSlash: true, // Adiciona barra ao final das URLs
   images: {
-    unoptimized: true,
+    unoptimized: true, // Necessário para exportação estática
   },
 };
