@@ -29,12 +29,6 @@ jobs:
       - name: Build the application
         run: npm run build
 
-      # 5. Mover saída para a pasta docs
-      - name: Move output to docs folder
-        run: |
-          rm -rf docs
-          mv out docs
-
       # 6. Commit e push para o repositório
       - name: Commit and push changes
         run: |
