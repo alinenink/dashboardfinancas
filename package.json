@@ -7,15 +7,17 @@
     "build": "next build",
     "export": "next export",
     "lint": "next lint",
-    "deploy": "npm run build && rm -rf docs && mv out docs && git add . && git commit -m 'Deploy to GitHub Pages' && git push"
+"deploy": "npm run build && if exist docs (rmdir /s /q docs) && move out docs && git add . && git commit -m \"Deploy to GitHub Pages\" && git push"
+
   },
   "dependencies": {
     "@chakra-ui/react": "^3.1.2",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
+    "@tailwindcss/forms": "^0.5.9",
     "chart.js": "^4.4.6",
     "framer-motion": "^11.11.17",
-    "next": "15.0.3",
+    "next": "^15.0.3",
     "react": "^18.3.1",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.3.1",

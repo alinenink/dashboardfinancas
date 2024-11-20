@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 
+
 html.light {
   @apply bg-gray-50 text-gray-800; /* Fundo claro pastel */
 }
