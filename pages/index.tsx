@@ -6,7 +6,7 @@ const Home = () => {
 
   useEffect(() => {
     // Verifica se está em produção
-    const basePath = process.env.NODE_ENV === "production" ? "/alineinkfinancas.github.io" : "";
+    const basePath = process.env.NODE_ENV === "production" ? "/alineninkfinancas.github.io" : "";
 
     // Redireciona para o dashboard com o caminho correto
     router.replace(`${basePath}/dashboard`);
