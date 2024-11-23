@@ -21,22 +21,27 @@ jobs:
           node-version: 18
           cache: 'npm'
 
-      # 3. Instalação de dependências
+      # 3. Limpar o cache anterior (opcional, para garantir consistência)
+      - name: Clear Cache
+        run: |
+          rm -rf .next out docs
+
+      # 4. Instalação de dependências
       - name: Install dependencies
         run: npm install
 
-      # 4. Build do projeto
+      # 5. Build do projeto
       - name: Build the application
         run: npm run build
 
-     # 5. Mover saída para a pasta docs
+      # 6. Mover saída para a pasta docs
       - name: Move output to docs folder
         run: |
           rm -rf docs
+          mkdir docs
           cp -R out/. docs
 
-
-      # 6. Commit e push para o repositório
+      # 7. Commit e push para o repositório
       - name: Commit and push changes
         run: |
           git config user.name "github-actions[bot]"
