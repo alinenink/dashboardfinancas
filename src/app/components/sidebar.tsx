@@ -56,7 +56,7 @@ const Sidebar = () => {
         <div className="flex justify-center mt-[5rem] mb-8">
           <div className="wrapped-circle">
             <img
-              src="/logo4.webp" // Substitua pelo novo logo gerado
+              src="/logo4.png" // Substitua pelo novo logo gerado
               alt="Logo"
               className="object-cover w-full h-full"
             />
