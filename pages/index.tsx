@@ -5,7 +5,11 @@ const Home = () => {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace("/dashboard");
+    // Verifica se está em produção
+    const basePath = process.env.NODE_ENV === "production" ? "/alineinkfinancas.github.io" : "";
+
+    // Redireciona para o dashboard com o caminho correto
+    router.replace(`${basePath}/dashboard`);
   }, [router]);
 
   return (
