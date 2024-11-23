@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { AiOutlineDashboard, AiOutlineSetting } from "react-icons/ai";
-import Image from "next/image";
 
 // Mock data for the months and categories (you can replace them with dynamic data)
 const months = [
