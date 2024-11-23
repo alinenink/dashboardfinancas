@@ -21,7 +21,7 @@ jobs:
           node-version: 18
           cache: 'npm'
 
-      # 3. Limpar o cache anterior (opcional, para garantir consistência)
+      # 3. Limpar cache ou arquivos antigos
       - name: Clear Cache
         run: |
           rm -rf .next out docs
@@ -34,12 +34,12 @@ jobs:
       - name: Build the application
         run: npm run build
 
-      # 6. Mover saída para a pasta docs
+      # 6. Copiar saída do build para a pasta docs
       - name: Move output to docs folder
         run: |
           rm -rf docs
           mkdir docs
-          cp -R out/. docs
+          cp -R out/* docs/
 
       # 7. Commit e push para o repositório
       - name: Commit and push changes
