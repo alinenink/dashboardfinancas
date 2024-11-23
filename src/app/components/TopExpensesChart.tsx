@@ -85,48 +85,48 @@ const TopExpensesChart: React.FC<TopExpensesChartProps> = ({
   };
 
   return (
-    <div className="flex flex-col p-4 bg-white dark:bg-gray-800 shadow-md rounded-lg h-[36vh]">
+    <div className="flex flex-col p-4 bg-white dark:bg-gray-800 shadow-md rounded-lg h-[37vh]">
       {/* Título do card */}
       <h3 className="text-lg font-bold mb-4 text-left text-gray-800 dark:text-gray-100">
         Top 5 Gastos do Mês
       </h3>
-
+  
       {/* Gráfico */}
       <div className="flex-grow">
         <Bar data={chartData} options={chartOptions} />
       </div>
-
+  
       {/* Legendas personalizadas */}
-      <div className="flex flex-wrap justify-center gap-3 mt-3">
+      <div className="flex flex-wrap justify-center gap-2 mt-3">
         {expenses.map((expense, index) => (
           <div key={expense.category} className="flex items-center">
             <div
-              className="w-4 h-4 rounded-full mr-2"
+              className="w-3 h-3 rounded-full mr-2"
               style={{
                 backgroundColor: pastelColors[index],
               }}
             ></div>
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
               {expense.category}
             </span>
           </div>
         ))}
       </div>
-
+  
       {/* Insights */}
-      <div className="mt-4">
-        <div className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-300 p-2 rounded-md mb-2">
+      <div className="mt-3 space-y-1">
+        <div className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-300 p-2 rounded-md text-xs leading-tight">
           <strong>Maior Gasto:</strong> {highestExpense.category}: R${" "}
           {highestExpense.amount.toFixed(2)}
         </div>
-        <div className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300 p-2 rounded-md">
+        <div className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300 p-2 rounded-md text-xs leading-tight">
           <strong>Aumento Total em Relação ao Mês Anterior:</strong> O total dos
           gastos aumentou em {increasePercentage.toFixed(2)}% em comparação ao
           mês anterior.
         </div>
       </div>
     </div>
-  );
+  );  
 };
 
 export default TopExpensesChart;

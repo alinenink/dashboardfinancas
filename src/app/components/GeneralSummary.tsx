@@ -21,28 +21,40 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
 
   return (
     <div
-      className={`flex items-center p-3 shadow-md rounded-lg h-[8vh] ${
+      className={`flex items-center p-6 shadow-md rounded-lg h-[10vh] ${
         isDarkMode ? "bg-gray-800" : "bg-white"
-      }`} // Adicionando cor de fundo conforme o tema
+      }`}
     >
-      {/* Ícone colorido */}
+      {/* Ícone maior e centralizado */}
       <div
-        className="flex items-center justify-center text-3xl"
+        className="flex items-center justify-center text-5xl mr-4"
         style={{ color: iconColor }}
       >
         {icon}
       </div>
 
-      {/* Informações */}
-      <div className="ml-4">
-        <h3 className={`text-sm font-semibold ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
+      {/* Informações alinhadas à direita */}
+      <div className="text-right flex-1">
+        <h3
+          className={`text-md font-medium mb-1 ${
+            isDarkMode ? "text-gray-300" : "text-gray-600"
+          }`}
+        >
           {title}
         </h3>
-        <p className={`text-lg font-bold ${isDarkMode ? "text-gray-100" : "text-gray-800"}`}>
+        <p
+          className={`text-2xl font-bold ${
+            isDarkMode ? "text-gray-100" : "text-gray-800"
+          }`}
+        >
           R$ {value.toFixed(2)}
         </p>
-        <span className={`text-xs ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
-          {percentage}% do total
+        <span
+          className={`text-sm ${
+            isDarkMode ? "text-gray-400" : "text-gray-500"
+          }`}
+        >
+          {percentage.toFixed(0)}% do total
         </span>
       </div>
     </div>
@@ -55,7 +67,7 @@ const GeneralSummary = () => {
   const remainingBalance = totalIncome - totalExpenses; // Saldo Restante
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
       <SummaryCard
         title="Renda Mensal"
         value={totalIncome}

@@ -54,14 +54,14 @@ const Sidebar = () => {
           isOpen ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"
         } md:relative md:translate-x-0 md:opacity-100 md:w-[15%]`}
       >
-        {/* Logo no topo */}
-        <div className="flex justify-center mt-[10rem] mb-8">
-          <Image
-            src="/logo.png" // Caminho relativo baseado na pasta `public`
-            alt="Logo"
-            width={200} // Largura da imagem em pixels
-            height={200} // Altura da imagem em pixels
-          />
+        <div className="flex justify-center mt-[5rem] mb-8">
+          <div className="wrapped-circle">
+            <img
+              src="/logo4.webp" // Substitua pelo novo logo gerado
+              alt="Logo"
+              className="object-cover w-full h-full"
+            />
+          </div>
         </div>
 
         {/* Bloco das opções */}

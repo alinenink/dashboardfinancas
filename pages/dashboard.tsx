@@ -42,32 +42,31 @@ const actualExpenses = [1200, 1300, 1250, 1350, 1400]; // Gastos reais
 
 const Dashboard = () => {
   return (
-    <div className="p-6 card-container h-screen overflow-y-scroll">
-      {/* Resumo geral */}
-      <GeneralSummary />
-      <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        <ExpenseCard title="Categorias em Percentuais" data={expenseData} />
-        <MonthlyExpensesChart
-          months={months}
-          categories={categories}
-          data={data}
-        />
-        <MonthlyExpensesLineChart
-          months={months}
-          categories={categories}
-          data={data}
-        />
-      </div>
-      <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-        {/* Segunda linha de componentes */}
-        <TopExpensesChart
-          expenses={expenses}
-          highestExpense={highestExpense}
-          increasePercentage={increasePercentage}
-        />{" "}
-        <FixedVsVariableExpenses fixed={fixed} variable={variable} />
-        <ProjectionChart months={months} actualExpenses={actualExpenses} />      </div>
+    <div className="p-6 card-container h-screen md:h-[calc(93vh)] overflow-y-auto md:overflow-hidden">
+    <GeneralSummary />
+    <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <ExpenseCard title="Categorias em Percentuais" data={expenseData} />
+      <MonthlyExpensesChart
+        months={months}
+        categories={categories}
+        data={data}
+      />
+      <MonthlyExpensesLineChart
+        months={months}
+        categories={categories}
+        data={data}
+      />
     </div>
+    <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+      <TopExpensesChart
+        expenses={expenses}
+        highestExpense={highestExpense}
+        increasePercentage={increasePercentage}
+      />
+      <FixedVsVariableExpenses fixed={fixed} variable={variable} />
+      <ProjectionChart months={months} actualExpenses={actualExpenses} />
+    </div>
+  </div>  
   );
 };
 

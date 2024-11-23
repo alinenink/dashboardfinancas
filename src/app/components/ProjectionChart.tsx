@@ -96,7 +96,7 @@ const ProjectionChart: React.FC<ProjectionChartProps> = ({ months, actualExpense
   };
 
   return (
-    <div className="flex flex-col p-4 bg-white dark:bg-gray-800 shadow-md rounded-lg h-[36vh]">
+    <div className="flex flex-col p-4 bg-white dark:bg-gray-800 shadow-md rounded-lg h-[37vh]">
       <h3 className="text-lg font-bold mb-4 text-left text-gray-800 dark:text-gray-100">
         Projeção de Gastos
       </h3>

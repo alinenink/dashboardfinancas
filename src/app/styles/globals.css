@@ -30,6 +30,14 @@ body {
   @apply min-h-screen flex flex-col;
 }
 
+.wrapped-circle {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+
 .header-layout {
   @apply fixed top-0 w-full z-20;
 }
@@ -54,25 +62,27 @@ body {
 /* Desktop: Sidebar posicionada corretamente */
 @media (min-width: 768px) {
   .sidebar {
-    @apply relative top-[2em] left-16 w-[25em] h-[calc(97vh)] transition-all;
+    @apply relative top-[2em] left-16 w-[25em] h-[calc(95vh)] transition-all;
   }
 }
 
 /* Mobile Sidebar */
 @media (max-width: 767px) {
   .sidebar {
-    @apply fixed top-[7px] left-[236px] w-[25vh] h-full transform -translate-x-full transition-transform duration-300 ease-in-out bg-white dark:bg-gray-800 shadow-lg z-20;
+    @apply fixed top-[7px] left-[209px] w-[25vh] h-full transform -translate-x-full transition-transform duration-300 ease-in-out bg-white dark:bg-gray-800 shadow-lg z-20;
   }
 }
 
 /* Cards */
 .card {
-  @apply bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 transition-transform hover:scale-105 hover:shadow-lg relative;
+  @apply bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 sm:p-8 transition-transform hover:scale-105 hover:shadow-lg relative border border-gray-200 dark:border-gray-700;
+  box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.1); /* Adiciona sombra superior e inferior */
 }
+
 
 /* Card Container */
 .card-container {
-  @apply absolute top-[8vh] left-[19%] w-[79%] z-10;
+  @apply absolute top-[7vh] left-[19%] w-[79%] z-10;
 }
 
 @media (max-width: 767px) {
