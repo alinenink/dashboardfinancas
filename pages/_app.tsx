@@ -1,6 +1,6 @@
 
 import { AppProps } from "next/app";
-import './globals.css';
+import 'src/app/styles/globals.css';
 import Header from "src/app/components/header";
 import { ThemeProvider } from "src/app/components/ThemeContext";
 import Sidebar from "@/components/sidebar";
