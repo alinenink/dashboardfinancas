@@ -8,12 +8,14 @@ interface ThemeContextProps {
 const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true); // Inicia no modo escuro
 
-  // Sincronizar com o tema do sistema
+  // Sincronizar com o tema do sistema no primeiro carregamento
   useEffect(() => {
-    const systemPrefersDark = window.matchMedia("(prefers-color-scheme: ligtht)").matches;
-    setIsDarkMode(systemPrefersDark);
+    const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    setIsDarkMode(systemPrefersDark || true); // Padrão: escuro
+    const html = document.documentElement;
+    html.classList.toggle("dark", systemPrefersDark || true); // Aplica classe "dark" no <html>
   }, []);
 
   const toggleTheme = () => {

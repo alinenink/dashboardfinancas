@@ -42,7 +42,7 @@ const actualExpenses = [1200, 1300, 1250, 1350, 1400]; // Gastos reais
 
 const Dashboard = () => {
   return (
-    <div className="p-6 card-container h-screen md:h-[calc(93vh)] overflow-y-auto md:overflow-hidden">
+    <div className="p-6 card-container screen-dashboard overflow-y-auto md:overflow-hidden">
     <GeneralSummary />
     <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
       <ExpenseCard title="Categorias em Percentuais" data={expenseData} />

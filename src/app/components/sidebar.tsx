@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { AiOutlineDashboard, AiOutlineSetting } from "react-icons/ai";
+import { AiOutlineDashboard, AiOutlineForm } from "react-icons/ai";
+import Link from "next/link"; // Importa o Link do Next.js
 
-// Mock data for the months and categories (you can replace them with dynamic data)
 const months = [
   "Janeiro",
   "Fevereiro",
@@ -27,7 +27,6 @@ const Sidebar = () => {
   const [endDate, setEndDate] = useState("");
 
   const handleFilter = () => {
-    // Logic to filter based on selected options
     console.log({
       selectedMonth,
       selectedCategory,
@@ -56,7 +55,7 @@ const Sidebar = () => {
         <div className="flex justify-center mt-[5rem] mb-8">
           <div className="wrapped-circle">
             <img
-              src="/logo4.png" // Substitua pelo novo logo gerado
+              src="/logo4.png"
               alt="Logo"
               className="object-cover w-full h-full"
             />
@@ -65,20 +64,16 @@ const Sidebar = () => {
 
         {/* Bloco das opções */}
         <nav className="space-y-6 pt-18 md:pt-16 px-6 mb-[7rem]">
-          <a
-            href="#"
-            className="flex items-center text-lg font-bold text-gray-700 dark:text-gray-100"
-          >
-            <AiOutlineDashboard className="mr-2" />
-            Visão Geral
-          </a>
-          <a
-            href="#"
-            className="flex items-center text-lg font-bold text-gray-700 dark:text-gray-100"
-          >
-            <AiOutlineSetting className="mr-2" />
-            Configurações
-          </a>
+          {/* Link para Visão Geral */}
+          <Link href="/dashboard" className="flex items-center text-lg font-bold text-gray-700 dark:text-gray-100">
+              <AiOutlineDashboard className="mr-2" />
+              Visão Geral
+          </Link>
+          {/* Link para Inserir Dados */}
+          <Link href="/transactions" className="flex items-center text-lg font-bold text-gray-700 dark:text-gray-100">
+              <AiOutlineForm className="mr-2" />
+              Inserir Dados
+          </Link>
         </nav>
 
         {/* Filtros */}
@@ -120,7 +115,7 @@ const Sidebar = () => {
               onChange={(e) => setSelectedCategory(e.target.value)}
               className="w-full mt-2 p-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300"
             >
-              <option value="">Selecione o tipo de gasto</option>
+              <option value="">Selecione</option>
               {categories.map((category) => (
                 <option key={category} value={category}>
                   {category}
@@ -135,7 +130,7 @@ const Sidebar = () => {
               htmlFor="periodo-personalizado"
               className="text-sm font-bold dark:text-gray-200"
             >
-              Período Personalizado
+              Período
             </label>
             <select
               id="periodo-personalizado"

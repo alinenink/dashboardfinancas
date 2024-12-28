@@ -21,7 +21,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
 
   return (
     <div
-      className={`flex items-center p-6 shadow-md rounded-lg h-[10vh] ${
+      className={`flex items-center p-6 shadow-md rounded-lg summary-card ${
         isDarkMode ? "bg-gray-800" : "bg-white"
       }`}
     >

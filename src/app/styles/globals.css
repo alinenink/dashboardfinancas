@@ -20,7 +20,6 @@ html {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
@@ -36,7 +35,6 @@ body {
   border-radius: 50%;
   overflow: hidden;
 }
-
 
 .header-layout {
   @apply fixed top-0 w-full z-20;
@@ -57,37 +55,64 @@ body {
 
 .sidebar-link {
   @apply block text-blue-400 dark:text-blue-300 hover:text-blue-500 dark:hover:text-blue-400 transition;
-}
-
-/* Desktop: Sidebar posicionada corretamente */
+}/* Desktop: Sidebar posicionada corretamente */
 @media (min-width: 768px) {
   .sidebar {
-    @apply relative top-[2em] left-16 w-[25em] h-[calc(95vh)] transition-all;
+    @apply relative top-[2em] w-[25em] h-[calc(95vh)] transition-all;
   }
 }
-
 /* Mobile Sidebar */
 @media (max-width: 767px) {
   .sidebar {
-    @apply fixed top-[7px] left-[209px] w-[25vh] h-full transform -translate-x-full transition-transform duration-300 ease-in-out bg-white dark:bg-gray-800 shadow-lg z-20;
+    @apply absolute left-[284px] w-[35vh] h-full transform -translate-x-full transition-transform duration-300 ease-in-out bg-white dark:bg-gray-800 shadow-lg z-20;
   }
 }
 
 /* Cards */
 .card {
-  @apply bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 sm:p-8 transition-transform hover:scale-105 hover:shadow-lg relative border border-gray-200 dark:border-gray-700;
+  @apply bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 sm:p-8 transition-transform hover:shadow-lg relative border border-gray-200 dark:border-gray-700;
   box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.1); /* Adiciona sombra superior e inferior */
 }
 
-
 /* Card Container */
 .card-container {
-  @apply absolute top-[7vh] left-[19%] w-[79%] z-10;
+  @apply absolute top-[7vh] left-[15%] w-[85%] z-10;
+}
+
+.summary-card {
+  @apply h-[10vh];
+}
+
+/* Grids */
+.grid {
+  @apply gap-12;
+}
+
+.card-h {
+  @apply h-[37vh];
+}
+
+.screen-dashboard {
+  @apply h-[93vh]
 }
 
 @media (max-width: 767px) {
   .card-container {
     @apply fixed top-[18vh] left-[6%] w-[86%] z-10;
+  }
+  .summary-card {
+    @apply h-[15vh];
+  }
+  .grid {
+    @apply gap-6;
+  }
+
+  .card-h {
+    @apply h-[57vh];
+  }
+
+  .screen-dashboard {
+   @apply h-[81vh];
   }
 }
 
@@ -101,23 +126,23 @@ body {
 }
 
 .chart-color-alimentacao {
-  background-color: #F8B4B4; /* Rosa pastel */
+  background-color: #f8b4b4; /* Rosa pastel */
 }
 
 .chart-color-transporte {
-  background-color: #A3D9A5; /* Verde pastel */
+  background-color: #a3d9a5; /* Verde pastel */
 }
 
 .chart-color-lazer {
-  background-color: #F9E79F; /* Amarelo pastel */
+  background-color: #f9e79f; /* Amarelo pastel */
 }
 
 .chart-color-saude {
-  background-color: #AFCDEA; /* Azul pastel */
+  background-color: #afcdea; /* Azul pastel */
 }
 
 .chart-color-educacao {
-  background-color: #C8A2C8; /* Roxo pastel */
+  background-color: #c8a2c8; /* Roxo pastel */
 }
 
 /* Header */
@@ -126,19 +151,24 @@ body {
 }
 
 .header-title {
-  @apply text-4xl mt-[-6vh] font-bold ml-[19.1%];
+  @apply text-4xl mt-[-6vh] font-bold ml-[15%];
+}
+
+@media (max-width: 767px) {
+  .header-title {
+    @apply mt-[-3vh];
+  }
 }
 
 /* Botões */
+
+.theme-button {
+  @apply mt-[-6vh];
+}
 .button {
   @apply px-4 py-2 rounded-lg text-white font-medium transition-all duration-200;
 }
 
 .button-secondary {
   @apply bg-gray-700 hover:bg-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700;
-}
-
-/* Grids */
-.grid {
-  @apply gap-12;
 }
