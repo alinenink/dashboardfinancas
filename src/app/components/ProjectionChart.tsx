@@ -1,5 +1,7 @@
 import React from "react";
 import { Line } from "react-chartjs-2";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,34 +13,55 @@ import {
 } from "chart.js";
 import { useTheme } from "./ThemeContext";
 
-// Registrar os elementos do Chart.js necessários
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip
+);
 
-interface ProjectionChartProps {
-  months: string[];
-  actualExpenses: number[];
-}
+const ProjectionChart: React.FC = () => {
+  const transactions = useSelector(
+    (state: RootState) => state.transactions.transactions
+  );
 
-const ProjectionChart: React.FC<ProjectionChartProps> = ({ months, actualExpenses }) => {
-  const { isDarkMode } = useTheme(); // Obtendo o estado do tema
-
-  // Calcular a média de gastos reais
-  const average = actualExpenses.reduce((sum, val) => sum + val, 0) / actualExpenses.length;
-
-  // Gerar previsões para os próximos meses
+  const actualMonths = ["Outubro", "Novembro", "Dezembro"];
   const futureMonths = ["Próximo Mês 1", "Próximo Mês 2", "Próximo Mês 3"];
+
+  // Filtrar despesas reais dos últimos três meses
+  const actualExpenses = actualMonths.map((month, index) => {
+    const expensesForMonth = transactions.filter((transaction) => {
+      const transactionDate = new Date(transaction.date);
+      const transactionMonth = transactionDate.getMonth();
+      return (
+        transaction.type === "Despesa" &&
+        transactionMonth === 9 + index // Outubro começa no índice 9
+      );
+    });
+
+    const total = expensesForMonth.reduce((sum, t) => sum + t.value, 0);
+    return total;
+  });
+
+  // Calcular média e projeções futuras
+  const average =
+    actualExpenses.reduce((sum, value) => sum + value, 0) /
+    actualExpenses.length;
+
   const projectedExpenses = futureMonths.map((_, index) => {
     return average * (1 + (index + 1) * 0.05); // Incremento de 5% por mês
   });
 
   // Dados do gráfico
   const chartData = {
-    labels: [...months, ...futureMonths],
+    labels: [...actualMonths, ...futureMonths],
     datasets: [
       {
         label: "Gastos Reais",
         data: actualExpenses,
-        borderColor: "#A3D9A5", // Verde pastel
+        borderColor: "#A3D9A5",
         backgroundColor: "#A3D9A5",
         borderWidth: 2,
         pointRadius: 5,
@@ -48,7 +71,7 @@ const ProjectionChart: React.FC<ProjectionChartProps> = ({ months, actualExpense
       {
         label: "Projeção de Gastos",
         data: [...Array(actualExpenses.length).fill(null), ...projectedExpenses],
-        borderColor: "#F8B4B4", // Rosa pastel
+        borderColor: "#F8B4B4",
         backgroundColor: "#F8B4B4",
         borderWidth: 2,
         pointRadius: 5,
@@ -59,7 +82,8 @@ const ProjectionChart: React.FC<ProjectionChartProps> = ({ months, actualExpense
     ],
   };
 
-  // Opções de configuração para o gráfico com base no tema
+  const { isDarkMode } = useTheme(); // Obtendo o estado do tema
+
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -70,13 +94,15 @@ const ProjectionChart: React.FC<ProjectionChartProps> = ({ months, actualExpense
         },
       },
       legend: {
-        display: false,
+        labels: {
+          color: isDarkMode ? "#f3f4f6" : "#1f2937",
+        },
       },
     },
     scales: {
       x: {
         ticks: {
-          color: isDarkMode ? "#f3f4f6" : "#1f2937", // Branco no escuro, preto no claro
+          color: isDarkMode ? "#f3f4f6" : "#1f2937",
           font: { size: 12 },
         },
         grid: {
@@ -85,7 +111,7 @@ const ProjectionChart: React.FC<ProjectionChartProps> = ({ months, actualExpense
       },
       y: {
         ticks: {
-          color: isDarkMode ? "#f3f4f6" : "#1f2937", // Branco no escuro, preto no claro
+          color: isDarkMode ? "#f3f4f6" : "#1f2937",
           font: { size: 12 },
         },
         grid: {

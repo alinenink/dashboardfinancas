@@ -96,6 +96,7 @@ const TransactionForm: React.FC = () => {
             >
               <option value="">Selecione</option>
               <option>Alimentação</option>
+              <option>Aluguel</option>
               <option>Transporte</option>
               <option>Lazer</option>
               <option>Saúde</option>

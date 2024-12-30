@@ -151,7 +151,7 @@ body {
 }
 
 .header-title {
-  @apply text-4xl mt-[-6vh] font-bold ml-[15%];
+  @apply text-4xl mt-[-5vh] font-bold ml-[15%];
 }
 
 @media (max-width: 767px) {
@@ -171,4 +171,22 @@ body {
 
 .button-secondary {
   @apply bg-gray-700 hover:bg-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700;
+}
+
+.button-gradient {
+  @apply px-4 py-2 rounded-lg font-medium text-white cursor-pointer transition-all duration-300;
+  background: linear-gradient(to right, #4facfe, #00f2fe); /* Gradiente claro */
+}
+
+.button-gradient:hover {
+  @apply shadow-md;
+  background: linear-gradient(to right, #00f2fe, #4facfe); /* Gradiente no hover */
+}
+
+html.dark .button-gradient {
+  background: linear-gradient(to right, #1a73e8, #4285f4); /* Gradiente escuro */
+}
+
+html.dark .button-gradient:hover {
+  background: linear-gradient(to right, #4285f4, #1a73e8); /* Gradiente escuro no hover */
 }

@@ -1,4 +1,6 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 import { Doughnut } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -8,34 +10,49 @@ import {
 
 ChartJS.register(ArcElement, Tooltip);
 
-interface ExpenseDataItem {
-  label: string;
-  value: number;
-}
+const ExpenseCard: React.FC = () => {
+  const transactions = useSelector(
+    (state: RootState) => state.transactions.transactions
+  );
 
-interface ExpenseCardProps {
-  title: string;
-  data: ExpenseDataItem[];
-}
+  // Filtrar apenas despesas
+  const expenses = transactions.filter((tx) => tx.type === "Despesa");
 
-const ExpenseCard: React.FC<ExpenseCardProps> = ({ title, data }) => {
+  // Calcular valores totais por categoria
+  const expenseByCategory: Record<string, number> = {};
+  expenses.forEach((expense) => {
+    const category = expense.category || "Outros";
+    if (!expenseByCategory[category]) {
+      expenseByCategory[category] = 0;
+    }
+    expenseByCategory[category] += expense.value;
+  });
+
+  const data = Object.entries(expenseByCategory).map(([label, value]) => ({
+    label,
+    value,
+  }));
+
   const total = data.reduce((sum, item) => sum + item.value, 0);
 
-  const pastelColors = [
-    "#F8B4B4", // Rosa pastel
-    "#A3D9A5", // Verde pastel
-    "#F9E79F", // Amarelo pastel
-    "#AFCDEA", // Azul pastel
-    "#C8A2C8", // Roxo pastel
-  ];
+  // Cores fixas para categorias
+  const categoryColors: Record<string, string> = {
+    Alimentação: "#F8B4B4", // Rosa
+    Transporte: "#A3D9A5",  // Verde
+    Lazer: "#F9E79F",       // Amarelo
+    Saúde: "#AFCDEA",       // Azul
+    Educação: "#C8A2C8",    // Roxo
+    Aluguel: "#F5A623",     // Laranja pastel
+    Outros: "#D3D3D3",      // Cinza claro
+  };  
 
   const chartData = {
     labels: data.map((item) => item.label),
     datasets: [
       {
         data: data.map((item) => item.value),
-        backgroundColor: pastelColors.slice(0, data.length),
-        borderColor: pastelColors.slice(0, data.length),
+        backgroundColor: data.map((item) => categoryColors[item.label] || "#D3D3D3"),
+        borderColor: data.map((item) => categoryColors[item.label] || "#D3D3D3"),
         borderWidth: 1,
       },
     ],
@@ -67,7 +84,7 @@ const ExpenseCard: React.FC<ExpenseCardProps> = ({ title, data }) => {
     <div className="flex flex-col p-4 bg-white dark:bg-gray-800 shadow-md rounded-lg card-h">
       {/* Título do card */}
       <h3 className="text-lg font-bold mb-4 text-left text-gray-800 dark:text-gray-100">
-        {title}
+        Categorias de Despesas
       </h3>
 
       {/* Conteúdo do card: gráfico e legendas */}
@@ -81,14 +98,14 @@ const ExpenseCard: React.FC<ExpenseCardProps> = ({ title, data }) => {
 
         {/* Legendas */}
         <div className="w-1/2 flex flex-col justify-center gap-2">
-          {data.map((item, index) => {
+          {data.map((item) => {
             const percentage = ((item.value / total) * 100).toFixed(2);
             return (
               <div key={item.label} className="flex items-center">
                 <div
                   className="w-4 h-4 rounded-full mr-2"
                   style={{
-                    backgroundColor: pastelColors[index],
+                    backgroundColor: categoryColors[item.label] || "#D3D3D3",
                   }}
                 ></div>
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">

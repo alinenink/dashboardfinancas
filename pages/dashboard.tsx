@@ -1,4 +1,4 @@
-import ExpenseCard from "src/app/components/ExpenseCard";
+import ExpenseCard from "@/components/ExpenseCard";
 import FixedVsVariableExpenses from "src/app/components/FixedVsVariableExpenses";
 import GeneralSummary from "src/app/components/GeneralSummary";
 import MonthlyExpensesChart from "src/app/components/MonthlyExpensesChart";

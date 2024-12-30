@@ -9,15 +9,10 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
-import { useTheme } from "./ThemeContext";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip);
-
-interface MonthlyExpensesLineChartProps {
-  months: string[];
-  categories: string[];
-  data: number[][];
-}
 
 const pastelColors = [
   "#F8B4B4", // Rosa pastel
@@ -25,15 +20,17 @@ const pastelColors = [
   "#F9E79F", // Amarelo pastel
   "#AFCDEA", // Azul pastel
   "#C8A2C8", // Roxo pastel
+  "#F5A623", // Laranja pastel (para Aluguel)
 ];
 
-const MonthlyExpensesLineChart: React.FC<MonthlyExpensesLineChartProps> = ({
-  months,
-  categories,
-  data,
-}) => {
-  const { isDarkMode } = useTheme();
+const MonthlyExpensesLineChart: React.FC = () => {
+  const transactions = useSelector(
+    (state: RootState) => state.transactions.transactions
+  );
+  const { categories } = useSelector((state: RootState) => state.transactions);
+
   const [chartOptions, setChartOptions] = useState<any>({});
+  const months = ["Outubro", "Novembro", "Dezembro"]; // Meses visíveis
 
   useEffect(() => {
     const options = {
@@ -46,9 +43,9 @@ const MonthlyExpensesLineChart: React.FC<MonthlyExpensesLineChartProps> = ({
           },
         },
         legend: {
-          display: true, // Mostrar a legenda para identificar as tendências
+          display: true,
           labels: {
-            color: isDarkMode ? "#f3f4f6" : "#1f2937",
+            color: "#f3f4f6",
             font: { size: 12 },
           },
         },
@@ -56,39 +53,66 @@ const MonthlyExpensesLineChart: React.FC<MonthlyExpensesLineChartProps> = ({
       scales: {
         x: {
           ticks: {
-            color: isDarkMode ? "#f3f4f6" : "#1f2937",
+            color: "#f3f4f6",
             font: { size: 12 },
           },
           grid: {
-            color: isDarkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)",
+            color: "rgba(255, 255, 255, 0.1)",
           },
         },
         y: {
           ticks: {
-            color: isDarkMode ? "#f3f4f6" : "#1f2937",
+            color: "#f3f4f6",
             font: { size: 12 },
           },
           grid: {
-            color: isDarkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.1)",
+            color: "rgba(255, 255, 255, 0.1)",
           },
         },
       },
     };
 
     setChartOptions(options);
-  }, [isDarkMode]);
+  }, []);
+
+  // Processar os dados das transações para criar as tendências
+  const monthlyData: Record<string, Record<string, number>> = {};
+
+  months.forEach((month) => {
+    monthlyData[month] = {};
+    categories.forEach((category) => {
+      monthlyData[month][category] = 0; // Inicializar com zero
+    });
+  });
+
+  transactions
+    .filter((tx) => tx.type === "Despesa")
+    .forEach((transaction) => {
+      const date = new Date(transaction.date);
+      const month = date.toLocaleString("pt-BR", { month: "long" });
+      const normalizedMonth =
+        month.charAt(0).toUpperCase() + month.slice(1); // Capitalizar
+
+      if (monthlyData[normalizedMonth] && transaction.category) {
+        monthlyData[normalizedMonth][transaction.category] += transaction.value;
+      }
+    });
+
+  const data = months.map((month) =>
+    categories.map((category) => monthlyData[month][category] || 0)
+  );
 
   const chartData = {
-    labels: months, // Mostra todos os meses
+    labels: months, // Meses
     datasets: categories.map((category, index) => ({
-      label: category, // Nome da categoria para a legenda
-      data: data.map((month) => month[index]), // Valores de tendência ao longo dos meses
+      label: category, // Nome da categoria
+      data: data.map((month) => month[index]), // Valores para cada mês
       borderColor: pastelColors[index],
       backgroundColor: pastelColors[index],
       borderWidth: 2,
       pointRadius: 5,
       pointBackgroundColor: pastelColors[index],
-      tension: 0.3, // Suaviza as linhas para mostrar tendências
+      tension: 0.3, // Suavizar as linhas
     })),
   };
 

@@ -1,5 +1,7 @@
 import React from "react";
 import { AiOutlineDollar, AiOutlineCreditCard, AiOutlineBank } from "react-icons/ai";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 import { useTheme } from "./ThemeContext";
 
 interface SummaryCardProps {
@@ -17,7 +19,7 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
   icon,
   iconColor,
 }) => {
-  const { isDarkMode } = useTheme(); // Obtendo o tema
+  const { isDarkMode } = useTheme();
 
   return (
     <div
@@ -25,7 +27,6 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
         isDarkMode ? "bg-gray-800" : "bg-white"
       }`}
     >
-      {/* Ícone maior e centralizado */}
       <div
         className="flex items-center justify-center text-5xl mr-4"
         style={{ color: iconColor }}
@@ -33,7 +34,6 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
         {icon}
       </div>
 
-      {/* Informações alinhadas à direita */}
       <div className="text-right flex-1">
         <h3
           className={`text-md font-medium mb-1 ${
@@ -62,30 +62,40 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
 };
 
 const GeneralSummary = () => {
-  const totalIncome = 5000; // Renda Mensal
-  const totalExpenses = 3000; // Despesas Totais
-  const remainingBalance = totalIncome - totalExpenses; // Saldo Restante
+  const transactions = useSelector(
+    (state: RootState) => state.transactions.transactions
+  );
+
+  const totalIncome = transactions
+    .filter((tx) => tx.type === "Renda")
+    .reduce((sum, tx) => sum + tx.value, 0);
+
+  const totalExpenses = transactions
+    .filter((tx) => tx.type === "Despesa")
+    .reduce((sum, tx) => sum + tx.value, 0);
+
+  const remainingBalance = totalIncome - totalExpenses;
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
       <SummaryCard
         title="Renda Mensal"
         value={totalIncome}
-        percentage={(totalIncome / totalIncome) * 100}
+        percentage={(totalIncome / totalIncome) * 100 || 0}
         icon={<AiOutlineDollar />}
         iconColor="#F5A623" // Laranja
       />
       <SummaryCard
         title="Despesas Totais"
         value={totalExpenses}
-        percentage={(totalExpenses / totalIncome) * 100}
+        percentage={(totalExpenses / totalIncome) * 100 || 0}
         icon={<AiOutlineCreditCard />}
         iconColor="#E94E77" // Vermelho
       />
       <SummaryCard
         title="Saldo Restante"
         value={remainingBalance}
-        percentage={(remainingBalance / totalIncome) * 100}
+        percentage={(remainingBalance / totalIncome) * 100 || 0}
         icon={<AiOutlineBank />}
         iconColor="#4A90E2" // Azul
       />
