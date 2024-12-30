@@ -54,7 +54,7 @@ const Sidebar = () => {
         <div className="flex justify-center mt-[5rem] mb-8">
           <div className="wrapped-circle">
             <img
-              src="/logo.jpeg"
+              src="logo.jpeg"
               alt="Logo"
               className="object-cover w-full h-full"
             />
