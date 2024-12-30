@@ -2,11 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { Doughnut } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-} from "chart.js";
+import { Chart as ChartJS, ArcElement, Tooltip } from "chart.js";
 
 ChartJS.register(ArcElement, Tooltip);
 
@@ -14,9 +10,22 @@ const ExpenseCard: React.FC = () => {
   const transactions = useSelector(
     (state: RootState) => state.transactions.transactions
   );
+  const filteredTransactions = useSelector(
+    (state: RootState) => state.transactions.filteredTransactions
+  );
+
+  // Verificar se há filtros aplicados
+  const isFilterApplied = filteredTransactions.length > 0;
+
+  // Usar transações filtradas ou todas as transações como padrão
+  const transactionsToUse = isFilterApplied
+    ? filteredTransactions
+    : transactions;
+
+  console.log("Using Transactions:", transactionsToUse);
 
   // Filtrar apenas despesas
-  const expenses = transactions.filter((tx) => tx.type === "Despesa");
+  const expenses = transactionsToUse.filter((tx) => tx.type === "Despesa");
 
   // Calcular valores totais por categoria
   const expenseByCategory: Record<string, number> = {};
@@ -38,21 +47,25 @@ const ExpenseCard: React.FC = () => {
   // Cores fixas para categorias
   const categoryColors: Record<string, string> = {
     Alimentação: "#F8B4B4", // Rosa
-    Transporte: "#A3D9A5",  // Verde
-    Lazer: "#F9E79F",       // Amarelo
-    Saúde: "#AFCDEA",       // Azul
-    Educação: "#C8A2C8",    // Roxo
-    Aluguel: "#F5A623",     // Laranja pastel
-    Outros: "#D3D3D3",      // Cinza claro
-  };  
+    Transporte: "#A3D9A5", // Verde
+    Lazer: "#F9E79F", // Amarelo
+    Saúde: "#AFCDEA", // Azul
+    Educação: "#C8A2C8", // Roxo
+    Aluguel: "#F5A623", // Laranja pastel
+    Outros: "#D3D3D3", // Cinza claro
+  };
 
   const chartData = {
     labels: data.map((item) => item.label),
     datasets: [
       {
         data: data.map((item) => item.value),
-        backgroundColor: data.map((item) => categoryColors[item.label] || "#D3D3D3"),
-        borderColor: data.map((item) => categoryColors[item.label] || "#D3D3D3"),
+        backgroundColor: data.map(
+          (item) => categoryColors[item.label] || "#D3D3D3"
+        ),
+        borderColor: data.map(
+          (item) => categoryColors[item.label] || "#D3D3D3"
+        ),
         borderWidth: 1,
       },
     ],
@@ -65,10 +78,7 @@ const ExpenseCard: React.FC = () => {
       tooltip: {
         callbacks: {
           label: (context: any) => {
-            const percentage = (
-              (context.raw / total) *
-              100
-            ).toFixed(2);
+            const percentage = ((context.raw / total) * 100).toFixed(2);
             return `${context.label}: R$ ${context.raw} (${percentage}%)`;
           },
         },

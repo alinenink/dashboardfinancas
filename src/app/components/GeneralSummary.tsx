@@ -62,15 +62,40 @@ const SummaryCard: React.FC<SummaryCardProps> = ({
 };
 
 const GeneralSummary = () => {
-  const transactions = useSelector(
+  const allTransactions = useSelector(
     (state: RootState) => state.transactions.transactions
   );
+  const filteredTransactions = useSelector(
+    (state: RootState) => state.transactions.filteredTransactions
+  );
 
-  const totalIncome = transactions
+  // Determinar transações a usar (filtradas ou padrão)
+  const transactionsToUse =
+    filteredTransactions.length > 0 ? filteredTransactions : allTransactions;
+
+  // Obter os últimos três meses dinamicamente
+  const today = new Date();
+  const lastThreeMonths = [];
+  for (let i = 2; i >= 0; i--) {
+    const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
+    lastThreeMonths.push(date.getMonth() + 1); // Mês 1-12
+  }
+
+  // Filtrar transações para os últimos três meses, caso não haja filtro
+  const relevantTransactions = filteredTransactions.length
+    ? transactionsToUse
+    : transactionsToUse.filter((tx) => {
+        const transactionDate = new Date(tx.date);
+        const transactionMonth = transactionDate.getMonth() + 1;
+        return lastThreeMonths.includes(transactionMonth);
+      });
+
+  // Cálculos de resumo
+  const totalIncome = relevantTransactions
     .filter((tx) => tx.type === "Renda")
     .reduce((sum, tx) => sum + tx.value, 0);
 
-  const totalExpenses = transactions
+  const totalExpenses = relevantTransactions
     .filter((tx) => tx.type === "Despesa")
     .reduce((sum, tx) => sum + tx.value, 0);
 

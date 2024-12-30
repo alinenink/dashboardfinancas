@@ -10,41 +10,91 @@ interface Transaction {
 
 interface TransactionsState {
   transactions: Transaction[];
+  filteredTransactions: Transaction[];
   categories: string[];
 }
 
+const generateTransactions = () => {
+  const categories = [
+    "Alimentação",
+    "Transporte",
+    "Lazer",
+    "Saúde",
+    "Educação",
+    "Aluguel",
+  ];
+
+  const additionalCategories = [
+    "Viagem",
+    "Hobbies",
+    "Tecnologia",
+  ];
+
+  const transactions: Transaction[] = [];
+  let id = 1;
+
+  // Gerar valores baseados em um padrão fixo para evitar variações
+  const getFixedValue = (month: number, category: string) =>
+    Math.floor(500 + month * 100 + category.length * 50);
+
+  // Adicionar renda mensal para todos os meses
+  for (let month = 1; month <= 12; month++) {
+    transactions.push({
+      id: id.toString(),
+      value: 10000 + month * 500, // Valor fixo de renda com ajuste por mês
+      category: "Salário",
+      date: `2023-${month.toString().padStart(2, "0")}-01`,
+      type: "Renda",
+    });
+    id++;
+  }
+
+  // Gerar transações para todos os meses e categorias padrão
+  for (let month = 1; month <= 12; month++) {
+    categories.forEach((category) => {
+      transactions.push({
+        id: id.toString(),
+        value: getFixedValue(month, category), // Valor determinístico
+        category,
+        date: `2023-${month.toString().padStart(2, "0")}-15`,
+        type: "Despesa",
+      });
+      id++;
+    });
+  }
+
+  // Adicionar categorias extras para os últimos 3 meses
+  [10, 11, 12].forEach((month) => {
+    additionalCategories.forEach((category) => {
+      transactions.push({
+        id: id.toString(),
+        value: getFixedValue(month, category) + 1000, // Valor determinístico
+        category,
+        date: `2023-${month.toString().padStart(2, "0")}-20`,
+        type: "Despesa",
+      });
+      id++;
+    });
+  });
+
+  return transactions;
+};
+
 const initialState: TransactionsState = {
-  transactions: [
-    // Renda - Últimos 3 meses
-    { id: "1", value: 15000, category: "Salário", date: "2023-10-01", type: "Renda" },
-    { id: "2", value: 10000, category: "Consultoria", date: "2023-11-01", type: "Renda" },
-    { id: "3", value: 9000, category: "Investimentos", date: "2023-12-01", type: "Renda" },
-  
-    // Despesas - Outubro
-    { id: "4", value: 2500, category: "Alimentação", date: "2023-10-05", type: "Despesa" },
-    { id: "5", value: 3000, category: "Transporte", date: "2023-10-10", type: "Despesa" },
-    { id: "6", value: 1500, category: "Lazer", date: "2023-10-15", type: "Despesa" },
-    { id: "7", value: 1200, category: "Saúde", date: "2023-10-20", type: "Despesa" },
-    { id: "8", value: 1000, category: "Educação", date: "2023-10-25", type: "Despesa" },
-    { id: "9", value: 4000, category: "Aluguel", date: "2023-10-30", type: "Despesa" },
-  
-    // Despesas - Novembro
-    { id: "10", value: 2800, category: "Alimentação", date: "2023-11-05", type: "Despesa" },
-    { id: "11", value: 2000, category: "Transporte", date: "2023-11-10", type: "Despesa" },
-    { id: "12", value: 1800, category: "Lazer", date: "2023-11-15", type: "Despesa" },
-    { id: "13", value: 1400, category: "Saúde", date: "2023-11-20", type: "Despesa" },
-    { id: "14", value: 1200, category: "Educação", date: "2023-11-25", type: "Despesa" },
-    { id: "15", value: 4200, category: "Aluguel", date: "2023-11-30", type: "Despesa" },
-  
-    // Despesas - Dezembro
-    { id: "16", value: 3000, category: "Alimentação", date: "2023-12-05", type: "Despesa" },
-    { id: "17", value: 2500, category: "Transporte", date: "2023-12-10", type: "Despesa" },
-    { id: "18", value: 2000, category: "Lazer", date: "2023-12-15", type: "Despesa" },
-    { id: "19", value: 1800, category: "Saúde", date: "2023-12-20", type: "Despesa" },
-    { id: "20", value: 1500, category: "Educação", date: "2023-12-25", type: "Despesa" },
-    { id: "21", value: 4500, category: "Aluguel", date: "2023-12-30", type: "Despesa" },
-  ],  
-  categories: ["Alimentação", "Transporte", "Lazer", "Saúde", "Educação", "Aluguel"],
+  transactions: generateTransactions(),
+  filteredTransactions: [],
+  categories: [
+    "Alimentação",
+    "Transporte",
+    "Lazer",
+    "Saúde",
+    "Educação",
+    "Aluguel",
+    "Viagem",
+    "Hobbies",
+    "Tecnologia",
+    "Salário", // Categoria de renda
+  ],
 };
 
 const transactionsSlice = createSlice({
@@ -59,8 +109,26 @@ const transactionsSlice = createSlice({
         (tx) => tx.id !== action.payload
       );
     },
+    filterTransactions: (
+      state,
+      action: PayloadAction<{ month?: number; category?: string }>
+    ) => {
+      const { month, category } = action.payload;
+
+      state.filteredTransactions = state.transactions.filter((tx) => {
+        const transactionDate = new Date(tx.date);
+        const transactionMonth = transactionDate.getMonth() + 1;
+
+        return (
+          (!month || transactionMonth === month) &&
+          (!category || tx.category === category)
+        );
+      });
+    },
   },
 });
 
-export const { addTransaction, removeTransaction } = transactionsSlice.actions;
+export const { addTransaction, removeTransaction, filterTransactions } =
+  transactionsSlice.actions;
+
 export default transactionsSlice.reducer;

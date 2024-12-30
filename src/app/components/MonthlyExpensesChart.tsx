@@ -16,13 +16,45 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip);
 const MonthlyExpensesChart: React.FC = () => {
   const { isDarkMode } = useTheme();
 
-  const transactions = useSelector(
+  const allTransactions = useSelector(
     (state: RootState) => state.transactions.transactions
   );
+  const filteredTransactions = useSelector(
+    (state: RootState) => state.transactions.filteredTransactions
+  );
 
-  // Categorias e meses
-  const categories = ["Alimentação", "Transporte", "Lazer", "Saúde", "Educação", "Aluguel"];
-  const months = ["Outubro", "Novembro", "Dezembro"];
+  // Determinar se há filtros aplicados
+  const transactionsToUse =
+    filteredTransactions.length > 0 ? filteredTransactions : allTransactions;
+
+  // Categorias
+  const categories = [
+    "Alimentação",
+    "Transporte",
+    "Lazer",
+    "Saúde",
+    "Educação",
+    "Aluguel",
+  ];
+
+  // Obter os meses a serem exibidos
+  const today = new Date();
+  const defaultMonths = [];
+  for (let i = 2; i >= 0; i--) {
+    const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
+    defaultMonths.push(
+      date.toLocaleString("pt-BR", { month: "long" }).charAt(0).toUpperCase() +
+        date.toLocaleString("pt-BR", { month: "long" }).slice(1)
+    );
+  }
+
+  const filteredMonths = [...new Set(transactionsToUse.map((tx) => {
+    const txDate = new Date(tx.date);
+    return txDate.toLocaleString("pt-BR", { month: "long" })
+      .charAt(0).toUpperCase() + txDate.toLocaleString("pt-BR", { month: "long" }).slice(1);
+  }))];
+
+  const months = filteredTransactions.length > 0 ? filteredMonths : defaultMonths;
 
   // Inicializar estrutura de despesas mensais
   const monthlyExpenses: Record<string, Record<string, number>> = {};
@@ -33,38 +65,24 @@ const MonthlyExpensesChart: React.FC = () => {
     });
   });
 
-  transactions
-  .filter((tx) => tx.type === "Despesa")
-  .forEach((transaction) => {
-    const expenseDate = new Date(transaction.date);
-    const expenseMonth = expenseDate.toLocaleString("pt-BR", { month: "long" });
+  transactionsToUse
+    .filter((tx) => tx.type === "Despesa")
+    .forEach((transaction) => {
+      const expenseDate = new Date(transaction.date);
+      const expenseMonth = expenseDate.toLocaleString("pt-BR", { month: "long" });
+      const normalizedMonth =
+        expenseMonth.charAt(0).toUpperCase() + expenseMonth.slice(1);
 
-    // Normalizar o mês para ter a inicial maiúscula
-    const normalizedMonth =
-      expenseMonth.charAt(0).toUpperCase() + expenseMonth.slice(1);
-
-    if (monthlyExpenses[normalizedMonth] && transaction.category) {
-      const value = typeof transaction.value === "string"
-        ? parseFloat(transaction.value.replace(/[^0-9.-]+/g, ""))
-        : transaction.value;
-
-      monthlyExpenses[normalizedMonth][transaction.category] += value;
-
-      console.log(
-        `Categoria: ${transaction.category}, Mês: ${normalizedMonth}, Valor: ${value}`
-      );
-    } else {
-      console.log(
-        `Transação ignorada: ${JSON.stringify(transaction)}, Mês: ${normalizedMonth}`
-      );
-    }
-  });
-
+      if (monthlyExpenses[normalizedMonth] && transaction.category) {
+        monthlyExpenses[normalizedMonth][transaction.category] += transaction.value;
+      }
+    });
 
   // Configurar dados para o gráfico
   const datasets = categories.map((category) => {
-    const data = months.map((month) => monthlyExpenses[month][category] || 0);
-    console.log(`Categoria: ${category}, Dados:`, data); // Log de cada categoria e seus dados
+    const data = months.map(
+      (month) => monthlyExpenses[month][category] || 0
+    );
     return {
       label: category,
       data,

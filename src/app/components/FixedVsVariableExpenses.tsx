@@ -2,54 +2,57 @@ import React from "react";
 import { Pie } from "react-chartjs-2";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-} from "chart.js";
+import { Chart as ChartJS, ArcElement, Tooltip } from "chart.js";
 
 ChartJS.register(ArcElement, Tooltip);
 
 const FixedVsVariableExpenses: React.FC = () => {
-  const transactions = useSelector(
+  // Selecionar dados do Redux
+  const allTransactions = useSelector(
     (state: RootState) => state.transactions.transactions
   );
+  const filteredTransactions = useSelector(
+    (state: RootState) => state.transactions.filteredTransactions
+  );
 
-  // Obter os últimos três meses disponíveis no Redux
-  const lastThreeMonths = [...new Set(transactions.map((t) => {
-    const date = new Date(t.date);
-    return `${date.getFullYear()}-${date.getMonth() + 1}`;
-  }))]
-    .sort()
-    .slice(-3);
+  // Determinar se há filtros aplicados
+  const transactionsToUse =
+    filteredTransactions.length > 0 ? filteredTransactions : allTransactions;
 
-  // Categorizar despesas por fixas e variáveis
+  // Caso não haja transações, evitar cálculo
+  if (!transactionsToUse || transactionsToUse.length === 0) {
+    return (
+      <div className="flex flex-col p-4 bg-white dark:bg-gray-800 shadow-md rounded-lg card-h">
+        <h3 className="text-lg font-bold mb-4 text-left text-gray-800 dark:text-gray-100">
+          Gastos Fixos vs Variáveis
+        </h3>
+        <p className="text-center text-gray-500">Nenhum dado disponível</p>
+      </div>
+    );
+  }
+
+  // Categorias fixas e variáveis padrão
   const fixedCategories = ["Aluguel", "Educação"];
   const variableCategories = ["Alimentação", "Transporte", "Lazer", "Saúde"];
 
   let fixedTotal = 0;
   let variableTotal = 0;
 
-  lastThreeMonths.forEach((month) => {
-    const [year, monthIndex] = month.split("-").map(Number);
+  // Variáveis para capturar as novas categorias de despesa
+  const newVariableCategories: Set<string> = new Set();
 
-    transactions.forEach((transaction) => {
-      const transactionDate = new Date(transaction.date);
-      const transactionYear = transactionDate.getFullYear();
-      const transactionMonth = transactionDate.getMonth() + 1;
-
-      if (
-        transaction.type === "Despesa" &&
-        transactionYear === year &&
-        transactionMonth === monthIndex
-      ) {
-        if (fixedCategories.includes(transaction.category || "")) {
-          fixedTotal += transaction.value;
-        } else if (variableCategories.includes(transaction.category || "")) {
-          variableTotal += transaction.value;
-        }
+  transactionsToUse.forEach((transaction) => {
+    if (transaction.type === "Despesa") {
+      if (fixedCategories.includes(transaction.category || "")) {
+        fixedTotal += transaction.value;
+      } else if (variableCategories.includes(transaction.category || "")) {
+        variableTotal += transaction.value;
+      } else {
+        // Categoria não definida como fixa ou variável, então é tratada como variável
+        newVariableCategories.add(transaction.category || "");
+        variableTotal += transaction.value;
       }
-    });
+    }
   });
 
   // Dados para o gráfico
@@ -121,6 +124,16 @@ const FixedVsVariableExpenses: React.FC = () => {
         <div className="text-sm font-medium text-gray-800 dark:text-gray-100">
           <strong>Gastos Variáveis:</strong> R$ {variableTotal.toFixed(2)}
         </div>
+        {newVariableCategories.size > 0 && (
+          <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mt-2">
+            <strong>Novas Categorias Variáveis Detectadas:</strong>
+            <ul>
+              {Array.from(newVariableCategories).map((category) => (
+                <li key={category}>{category}</li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   );

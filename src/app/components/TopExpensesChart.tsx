@@ -23,31 +23,51 @@ const pastelColors = [
 ];
 
 const TopExpensesChart: React.FC = () => {
-  const transactions = useSelector(
+  const allTransactions = useSelector(
     (state: RootState) => state.transactions.transactions
   );
-
-  // Obter o último mês disponível no Redux
-  const lastMonth = Math.max(
-    ...transactions.map(
-      (transaction) => new Date(transaction.date).getMonth() + 1
-    )
+  const filteredTransactions = useSelector(
+    (state: RootState) => state.transactions.filteredTransactions
   );
 
   const { isDarkMode } = useTheme();
 
-  // Filtrar despesas do último mês
-  const lastMonthExpenses = transactions.filter((transaction) => {
+  // Determinar transações a usar (filtradas ou padrão)
+  const transactionsToUse =
+    filteredTransactions.length > 0 ? filteredTransactions : allTransactions;
+
+  // Calcular o mês do último mês ou o mês do filtro
+  const today = new Date();
+  const lastThreeMonths = [];
+  for (let i = 2; i >= 0; i--) {
+    const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
+    lastThreeMonths.push(date.getMonth() + 1); // Mês 1-12
+  }
+
+  const selectedMonth = filteredTransactions.length
+    ? Math.max(
+        ...filteredTransactions.map((transaction) => {
+          const transactionDate = new Date(transaction.date);
+          return transactionDate.getMonth() + 1;
+        })
+      )
+    : lastThreeMonths;
+
+  // Filtrar despesas do mês selecionado ou últimos três meses
+  const relevantExpenses = transactionsToUse.filter((transaction) => {
     const transactionDate = new Date(transaction.date);
     const transactionMonth = transactionDate.getMonth() + 1;
-    return transaction.type === "Despesa" && transactionMonth === lastMonth;
+    return (
+      transaction.type === "Despesa" &&
+      (filteredTransactions.length
+        ? transactionMonth === selectedMonth
+        : lastThreeMonths.includes(transactionMonth))
+    );
   });
-
-  console.log("Despesas do último mês:", lastMonthExpenses);
 
   // Somar os valores por categoria
   const expensesByCategory: Record<string, number> = {};
-  lastMonthExpenses.forEach((expense) => {
+  relevantExpenses.forEach((expense) => {
     if (expense.category) {
       if (!expensesByCategory[expense.category]) {
         expensesByCategory[expense.category] = 0;
@@ -56,15 +76,11 @@ const TopExpensesChart: React.FC = () => {
     }
   });
 
-  console.log("Gastos por categoria:", expensesByCategory);
-
   // Ordenar e selecionar as 5 maiores despesas
   const topExpenses = Object.entries(expensesByCategory)
     .map(([category, amount]) => ({ category, amount }))
     .sort((a, b) => b.amount - a.amount)
     .slice(0, 5);
-
-  console.log("Top 5 despesas:", topExpenses);
 
   // Configurar dados do gráfico
   const chartData = {
@@ -79,8 +95,6 @@ const TopExpensesChart: React.FC = () => {
       },
     ],
   };
-
-  console.log("Dados do gráfico:", chartData);
 
   // Configurar opções do gráfico
   const chartOptions = {
@@ -99,7 +113,7 @@ const TopExpensesChart: React.FC = () => {
     scales: {
       x: {
         ticks: {
-          color: isDarkMode ? "#f3f4f6" : "#1f2937", // Branco no escuro, preto no claro
+          color: isDarkMode ? "#f3f4f6" : "#1f2937",
           font: { size: 12 },
         },
         grid: {
@@ -108,7 +122,7 @@ const TopExpensesChart: React.FC = () => {
       },
       y: {
         ticks: {
-          color: isDarkMode ? "#f3f4f6" : "#1f2937", // Branco no escuro, preto no claro
+          color: isDarkMode ? "#f3f4f6" : "#1f2937",
           font: { size: 12 },
         },
         grid: {
