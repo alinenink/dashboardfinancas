@@ -64,26 +64,36 @@ const Sidebar = () => {
         {/* Descritivo do Portal */}
         <div className="px-6 text-center mb-8">
           <p className="text-sm text-gray-700 dark:text-gray-300">
-            No Dashboard de Finanças você visualiza suas finanças nos últimos três meses conforme os dados inseridos.
+            No Dashboard de Finanças você visualiza suas finanças nos últimos
+            três meses conforme os dados inseridos.
           </p>
         </div>
 
         {/* Links de Navegação */}
         <nav className="space-y-6 pt-18 md:pt-16 px-6 mb-[7rem]">
-          <Link href="/dashboard" className="flex items-center text-lg font-bold text-gray-700 dark:text-gray-100">
+          <Link
+            href="/dashboard"
+            className="flex items-center text-lg font-bold text-gray-700 dark:text-gray-100"
+          >
             <AiOutlineDashboard className="mr-2" />
             Visão Geral
           </Link>
-          <Link href="/transactions" className="flex items-center text-lg font-bold text-gray-700 dark:text-gray-100">
+          <Link
+            href="/transactions"
+            className="flex items-center text-lg font-bold text-gray-700 dark:text-gray-100"
+          >
             <AiOutlineForm className="mr-2" />
             Inserir Dados
           </Link>
         </nav>
 
         {/* Filtros */}
-        <div className="px-6 mt-6 space-y-4">
+        <div className="px-6 mt-6 space-y-4 mobile-header">
           <div>
-            <label htmlFor="periodo-fixo" className="text-sm font-bold dark:text-gray-200">
+            <label
+              htmlFor="periodo-fixo"
+              className="text-sm font-bold dark:text-gray-200"
+            >
               Período Fixo
             </label>
             <select
@@ -110,6 +120,10 @@ const Sidebar = () => {
               Filtrar
             </button>
           </div>
+        </div>
+
+        <div className="absolute bottom-4 left-0 right-0 text-center text-gray-500 text-sm">
+          Desenvolvido por Aline Nink. Todos os direitos reservados.
         </div>
       </aside>
 

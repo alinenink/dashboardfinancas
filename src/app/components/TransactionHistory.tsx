@@ -13,7 +13,9 @@ const TransactionHistory: React.FC = () => {
   const [selectedType, setSelectedType] = useState("");
   const [selectedMonth, setSelectedMonth] = useState("");
 
-  const categories = [...new Set(transactions.map((t) => t.category).filter(Boolean))];
+  const categories = [
+    ...new Set(transactions.map((t) => t.category).filter(Boolean)),
+  ];
   const months = [
     { value: "1", label: "Janeiro" },
     { value: "2", label: "Fevereiro" },
@@ -56,12 +58,17 @@ const TransactionHistory: React.FC = () => {
   return (
     <div className="card p-6">
       <h2 className="text-xl font-bold mb-2">Histórico</h2>
-      <p className="text-gray-500 mb-4">Gerencie suas transações e acompanhe seus gastos e rendas registrados.</p>
+      <p className="text-gray-500 mb-4">
+        Gerencie suas transações e acompanhe seus gastos e rendas registrados.
+      </p>
 
       {/* Filtros */}
       <div className="flex flex-wrap gap-4 mb-4">
         <div className="flex-1">
-          <label htmlFor="category" className="text-sm font-bold text-gray-600 dark:text-gray-200">
+          <label
+            htmlFor="category"
+            className="text-sm font-bold text-gray-600 dark:text-gray-200"
+          >
             Categoria
           </label>
           <select
@@ -80,7 +87,10 @@ const TransactionHistory: React.FC = () => {
         </div>
 
         <div className="flex-1">
-          <label htmlFor="type" className="text-sm font-bold text-gray-600 dark:text-gray-200">
+          <label
+            htmlFor="type"
+            className="text-sm font-bold text-gray-600 dark:text-gray-200"
+          >
             Tipo
           </label>
           <select
@@ -96,7 +106,10 @@ const TransactionHistory: React.FC = () => {
         </div>
 
         <div className="flex-1">
-          <label htmlFor="month" className="text-sm font-bold text-gray-600 dark:text-gray-200">
+          <label
+            htmlFor="month"
+            className="text-sm font-bold text-gray-600 dark:text-gray-200"
+          >
             Mês
           </label>
           <select
@@ -119,7 +132,7 @@ const TransactionHistory: React.FC = () => {
       {filteredTransactions.length === 0 ? (
         <p className="text-gray-500">Nenhuma transação encontrada.</p>
       ) : (
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto mb-6">
           <table className="w-full border-collapse text-sm md:text-base">
             <thead>
               <tr>
@@ -139,7 +152,9 @@ const TransactionHistory: React.FC = () => {
                       currency: "BRL",
                     })}
                   </td>
-                  <td className="border-b p-2">{transaction.category || "-"}</td>
+                  <td className="border-b p-2">
+                    {transaction.category || "-"}
+                  </td>
                   <td className="border-b p-2">{transaction.date}</td>
                   <td className="border-b p-2">
                     {transaction.type === "Renda" ? "Renda" : "Despesa"}

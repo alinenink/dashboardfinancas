@@ -156,7 +156,11 @@ body {
 
 @media (max-width: 767px) {
   .header-title {
-    @apply mt-[-3vh];
+    @apply mt-[-1vh] text-3xl;
+  }
+
+  .mobile-header {
+    @apply relative top-[-5em]
   }
 }
 
