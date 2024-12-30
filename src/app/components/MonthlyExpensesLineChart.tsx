@@ -24,13 +24,36 @@ const pastelColors = [
 ];
 
 const MonthlyExpensesLineChart: React.FC = () => {
-  const transactions = useSelector(
+  const allTransactions = useSelector(
     (state: RootState) => state.transactions.transactions
+  );
+  const filteredTransactions = useSelector(
+    (state: RootState) => state.transactions.filteredTransactions
   );
   const { categories } = useSelector((state: RootState) => state.transactions);
 
   const [chartOptions, setChartOptions] = useState<any>({});
-  const months = ["Outubro", "Novembro", "Dezembro"]; // Meses visíveis
+
+  const transactionsToUse =
+    filteredTransactions.length > 0 ? filteredTransactions : allTransactions;
+
+  // Função para calcular projeções de meses
+  const calculateProjectionMonths = (startMonth: number) => {
+    const months = [];
+    for (let i = 0; i < 3; i++) {
+      const date = new Date(2023, startMonth - 1 + i, 1); // Avançar meses
+      months.push(
+        date.toLocaleString("pt-BR", { month: "long" }).charAt(0).toUpperCase() +
+          date.toLocaleString("pt-BR", { month: "long" }).slice(1)
+      );
+    }
+    return months;
+  };
+
+  const displayedMonths =
+    filteredTransactions.length > 0
+      ? calculateProjectionMonths(new Date(filteredTransactions[0]?.date).getMonth() + 1)
+      : calculateProjectionMonths(new Date().getMonth() - 2);
 
   useEffect(() => {
     const options = {
@@ -75,35 +98,53 @@ const MonthlyExpensesLineChart: React.FC = () => {
     setChartOptions(options);
   }, []);
 
-  // Processar os dados das transações para criar as tendências
+  // Processar os dados das transações e projeções
   const monthlyData: Record<string, Record<string, number>> = {};
 
-  months.forEach((month) => {
+  displayedMonths.forEach((month) => {
     monthlyData[month] = {};
     categories.forEach((category) => {
       monthlyData[month][category] = 0; // Inicializar com zero
     });
   });
 
-  transactions
+  // Preencher dados reais
+  transactionsToUse
     .filter((tx) => tx.type === "Despesa")
     .forEach((transaction) => {
       const date = new Date(transaction.date);
       const month = date.toLocaleString("pt-BR", { month: "long" });
       const normalizedMonth =
-        month.charAt(0).toUpperCase() + month.slice(1); // Capitalizar
+        month.charAt(0).toUpperCase() + month.slice(1);
 
       if (monthlyData[normalizedMonth] && transaction.category) {
         monthlyData[normalizedMonth][transaction.category] += transaction.value;
       }
     });
 
-  const data = months.map((month) =>
+  // Preencher projeções para meses futuros
+  const lastRealMonthIndex = displayedMonths.findIndex(
+    (month) => monthlyData[month] && Object.values(monthlyData[month]).some((value) => value > 0)
+  );
+
+  if (lastRealMonthIndex !== -1) {
+    for (let i = lastRealMonthIndex + 1; i < displayedMonths.length; i++) {
+      const currentMonth = displayedMonths[i];
+      const previousMonth = displayedMonths[lastRealMonthIndex];
+
+      categories.forEach((category) => {
+        monthlyData[currentMonth][category] =
+          monthlyData[previousMonth][category] * 0.95; // Exemplo de projeção (redução de 5%)
+      });
+    }
+  }
+
+  const data = displayedMonths.map((month) =>
     categories.map((category) => monthlyData[month][category] || 0)
   );
 
   const chartData = {
-    labels: months, // Meses
+    labels: displayedMonths, // Meses
     datasets: categories.map((category, index) => ({
       label: category, // Nome da categoria
       data: data.map((month) => month[index]), // Valores para cada mês
