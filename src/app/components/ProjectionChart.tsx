@@ -23,44 +23,69 @@ ChartJS.register(
 );
 
 const ProjectionChart: React.FC = () => {
-  const transactions = useSelector(
+  const allTransactions = useSelector(
     (state: RootState) => state.transactions.transactions
   );
+  const filteredTransactions = useSelector(
+    (state: RootState) => state.transactions.filteredTransactions
+  );
 
-  const actualMonths = ["Outubro", "Novembro", "Dezembro"];
-  const futureMonths = ["Próximo Mês 1", "Próximo Mês 2", "Próximo Mês 3"];
+  const transactionsToUse =
+    filteredTransactions.length > 0 ? filteredTransactions : allTransactions;
 
-  // Filtrar despesas reais dos últimos três meses
-  const actualExpenses = actualMonths.map((month, index) => {
-    const expensesForMonth = transactions.filter((transaction) => {
-      const transactionDate = new Date(transaction.date);
-      const transactionMonth = transactionDate.getMonth();
-      return (
-        transaction.type === "Despesa" &&
-        transactionMonth === 9 + index // Outubro começa no índice 9
+  const { isDarkMode } = useTheme();
+
+  // Função para calcular os meses de projeção
+  const calculateMonths = (startMonth: number) => {
+    const months = [];
+    for (let i = 0; i < 5; i++) {
+      const date = new Date(2023, startMonth - 1 + i, 1);
+      months.push(
+        date.toLocaleString("pt-BR", { month: "long" }).charAt(0).toUpperCase() +
+          date.toLocaleString("pt-BR", { month: "long" }).slice(1)
       );
+    }
+    return months;
+  };
+
+  const startMonth =
+    filteredTransactions.length > 0
+      ? new Date(filteredTransactions[0]?.date).getMonth() + 1
+      : new Date().getMonth() - 2;
+
+  const displayedMonths = calculateMonths(startMonth);
+
+  // Calcular gastos reais para os meses selecionados
+  const actualExpenses = displayedMonths.slice(0, 3).map((month, index) => {
+    const expensesForMonth = transactionsToUse.filter((transaction) => {
+      const transactionDate = new Date(transaction.date);
+      const transactionMonth =
+        transactionDate.toLocaleString("pt-BR", { month: "long" });
+      const normalizedMonth =
+        transactionMonth.charAt(0).toUpperCase() + transactionMonth.slice(1);
+
+      return transaction.type === "Despesa" && normalizedMonth === month;
     });
 
-    const total = expensesForMonth.reduce((sum, t) => sum + t.value, 0);
-    return total;
+    return expensesForMonth.reduce((sum, t) => sum + t.value, 0);
   });
 
-  // Calcular média e projeções futuras
+  // Calcular média e projeção dos próximos dois meses
   const average =
     actualExpenses.reduce((sum, value) => sum + value, 0) /
-    actualExpenses.length;
+    (actualExpenses.filter((v) => v > 0).length || 1);
 
-  const projectedExpenses = futureMonths.map((_, index) => {
+  const projectedExpenses = displayedMonths.slice(3).map((_, index) => {
     return average * (1 + (index + 1) * 0.05); // Incremento de 5% por mês
   });
 
-  // Dados do gráfico
+  // Configuração dos dados do gráfico
   const chartData = {
-    labels: [...actualMonths, ...futureMonths],
+    labels: displayedMonths,
     datasets: [
       {
         label: "Gastos Reais",
-        data: actualExpenses,
+        data: [...actualExpenses, ...Array(projectedExpenses.length).fill(null)],
         borderColor: "#A3D9A5",
         backgroundColor: "#A3D9A5",
         borderWidth: 2,
@@ -70,7 +95,10 @@ const ProjectionChart: React.FC = () => {
       },
       {
         label: "Projeção de Gastos",
-        data: [...Array(actualExpenses.length).fill(null), ...projectedExpenses],
+        data: [
+          ...Array(actualExpenses.length).fill(null),
+          ...projectedExpenses,
+        ],
         borderColor: "#F8B4B4",
         backgroundColor: "#F8B4B4",
         borderWidth: 2,
@@ -81,8 +109,6 @@ const ProjectionChart: React.FC = () => {
       },
     ],
   };
-
-  const { isDarkMode } = useTheme(); // Obtendo o estado do tema
 
   const chartOptions = {
     responsive: true,

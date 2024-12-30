@@ -19,52 +19,15 @@ const months = [
   { name: "Dezembro", value: 12 },
 ];
 
-const categories = ["Alimentação", "Transporte", "Saúde", "Lazer", "Educação"];
-
 const Sidebar = () => {
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState<number | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [periodType, setPeriodType] = useState("Ultimo Mês");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
 
   const handleFilter = () => {
-    const today = new Date();
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    const maxRange = 90; // Máximo de 3 meses
-    const maxYears = 5; // Máximo de 5 anos atrás
-
-    // Validação de range de datas
-    if (periodType === "Personalizado") {
-      if (start > end) {
-        alert("A data inicial não pode ser maior que a data final.");
-        return;
-      }
-
-      const diffInDays = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
-      if (diffInDays > maxRange) {
-        alert("O intervalo máximo é de 3 meses.");
-        return;
-      }
-
-      const fiveYearsAgo = new Date();
-      fiveYearsAgo.setFullYear(today.getFullYear() - maxYears);
-      if (start < fiveYearsAgo) {
-        alert("O intervalo deve estar dentro dos últimos 5 anos.");
-        return;
-      }
-    }
-
-    // Aplicar filtro no Redux
     dispatch(
       filterTransactions({
         month: selectedMonth || undefined,
-        category: selectedCategory || undefined,
-        startDate: periodType === "Personalizado" ? startDate : null,
-        endDate: periodType === "Personalizado" ? endDate : null,
       })
     );
 
@@ -87,6 +50,7 @@ const Sidebar = () => {
           isOpen ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"
         } md:relative md:translate-x-0 md:opacity-100 md:w-[15%]`}
       >
+        {/* Logo */}
         <div className="flex justify-center mt-[5rem] mb-8">
           <div className="wrapped-circle">
             <img
@@ -97,7 +61,14 @@ const Sidebar = () => {
           </div>
         </div>
 
-        {/* Bloco das opções */}
+        {/* Descritivo do Portal */}
+        <div className="px-6 text-center mb-8">
+          <p className="text-sm text-gray-700 dark:text-gray-300">
+            No Dashboard de Finanças você visualiza suas finanças nos últimos três meses conforme os dados inseridos.
+          </p>
+        </div>
+
+        {/* Links de Navegação */}
         <nav className="space-y-6 pt-18 md:pt-16 px-6 mb-[7rem]">
           <Link href="/dashboard" className="flex items-center text-lg font-bold text-gray-700 dark:text-gray-100">
             <AiOutlineDashboard className="mr-2" />
@@ -127,7 +98,13 @@ const Sidebar = () => {
                 </option>
               ))}
             </select>
-          </div>   
+          </div>
+
+          {/* Descritivo do Filtro */}
+          <div className="mt-4 text-sm text-gray-700 dark:text-gray-300">
+            Selecione um mês para visualizar dados específicos de um período.
+          </div>
+
           <div className="mt-4 text-center">
             <button onClick={handleFilter} className="button-gradient">
               Filtrar
@@ -136,6 +113,7 @@ const Sidebar = () => {
         </div>
       </aside>
 
+      {/* Background Overlay para mobile */}
       {isOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-12 md:hidden transition-opacity duration-300"
