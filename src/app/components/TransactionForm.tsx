@@ -11,44 +11,44 @@ const TransactionForm: React.FC = () => {
   });
   const dispatch = useDispatch();
 
-  // Data máxima e mínima permitidas
   const today = new Date();
   const fiveYearsAgo = new Date();
   fiveYearsAgo.setFullYear(today.getFullYear() - 5);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-  
-    // Validação do valor
-    const numericValue = parseFloat(form.value.replace(/[^0-9,-]+/g, "").replace(",", "."));
+
+    const numericValue = parseFloat(
+      form.value.replace(/[^0-9,-]+/g, "").replace(",", ".")
+    );
     if (isNaN(numericValue) || numericValue <= 0) {
       alert("Por favor, insira um valor válido.");
       return;
     }
-  
+
     const newTransaction = {
       id: Date.now().toString(),
-      value: numericValue, // Certifique-se de que é um número
+      value: numericValue,
       category: form.type === "Despesa" ? form.category : null,
       date: form.date,
       type: form.type,
     };
-  
+
     dispatch(addTransaction(newTransaction));
     setForm({ value: "", category: "", date: "", type: "Renda" });
   };
-  
+
   const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const type = e.target.value;
     setForm({
       ...form,
       type,
-      category: type === "Renda" ? "" : form.category, // Limpa a categoria se for "Renda"
+      category: type === "Renda" ? "" : form.category,
     });
   };
 
   const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, ""); // Remove caracteres não numéricos
+    const value = e.target.value.replace(/\D/g, "");
     const formattedValue = (parseFloat(value) / 100).toLocaleString("pt-BR", {
       style: "currency",
       currency: "BRL",
@@ -58,16 +58,21 @@ const TransactionForm: React.FC = () => {
 
   return (
     <div className="card p-6">
-      {/* Título do Formulário */}
-      <h2 className="text-xl font-bold mb-4">Inserir Transação</h2>
-      
+      <div className="mb-6 text-left">
+        <h2 className="text-xl font-bold">Inserir Transação</h2>
+        <p className="text-sm text-gray-600 dark:text-gray-300">
+          Aqui você pode registrar seus gastos e sua renda selecionando a data e
+          categoria desejadas.
+        </p>
+      </div>
+
       <form
         onSubmit={handleSubmit}
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+        className="flex flex-wrap items-center gap-4 w-full"
       >
         {/* Campo Valor */}
-        <div className="flex flex-col gap-2">
-          <label htmlFor="value" className="font-bold">
+        <div className="flex-1 min-w-[150px]">
+          <label htmlFor="value" className="font-bold block mb-1">
             Valor
           </label>
           <input
@@ -75,23 +80,56 @@ const TransactionForm: React.FC = () => {
             id="value"
             value={form.value}
             onChange={handleValueChange}
-            className="p-3 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            className="w-full h-[44px] p-2 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
             placeholder="Digite o valor"
             required
           />
         </div>
 
+        {/* Campo Data */}
+        <div className="flex-1 min-w-[150px]">
+          <label htmlFor="date" className="font-bold block mb-1">
+            Data
+          </label>
+          <input
+            type="date"
+            id="date"
+            value={form.date}
+            onChange={(e) => setForm({ ...form, date: e.target.value })}
+            className="w-full h-[44px] p-2 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            max={today.toISOString().split("T")[0]}
+            min={fiveYearsAgo.toISOString().split("T")[0]}
+            required
+          />
+        </div>
+
+        {/* Campo Tipo */}
+        <div className="flex-1 min-w-[150px]">
+          <label htmlFor="type" className="font-bold block mb-1">
+            Tipo
+          </label>
+          <select
+            id="type"
+            value={form.type}
+            onChange={handleTypeChange}
+            className="w-full h-[44px] p-2 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          >
+            <option>Renda</option>
+            <option>Despesa</option>
+          </select>
+        </div>
+
         {/* Campo Categoria */}
         {form.type === "Despesa" && (
-          <div className="flex flex-col gap-2">
-            <label htmlFor="category" className="font-bold">
+          <div className="flex-1 min-w-[150px]">
+            <label htmlFor="category" className="font-bold block mb-1">
               Categoria
             </label>
             <select
               id="category"
               value={form.category}
               onChange={(e) => setForm({ ...form, category: e.target.value })}
-              className="p-3 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full h-[44px] p-2 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
               required={form.type === "Despesa"}
             >
               <option value="">Selecione</option>
@@ -105,44 +143,12 @@ const TransactionForm: React.FC = () => {
           </div>
         )}
 
-        {/* Campo Data */}
-        <div className="flex flex-col gap-2">
-          <label htmlFor="date" className="font-bold">
-            Data
-          </label>
-          <input
-            type="date"
-            id="date"
-            value={form.date}
-            onChange={(e) => setForm({ ...form, date: e.target.value })}
-            className="p-3 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-            max={today.toISOString().split("T")[0]} // Limita à data atual
-            min={fiveYearsAgo.toISOString().split("T")[0]} // Limita a 5 anos atrás
-            required
-          />
-        </div>
-
-        {/* Campo Tipo */}
-        <div className="flex flex-col gap-2">
-          <label htmlFor="type" className="font-bold">
-            Tipo
-          </label>
-          <select
-            id="type"
-            value={form.type}
-            onChange={handleTypeChange}
-            className="p-3 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-          >
-            <option>Renda</option>
-            <option>Despesa</option>
-          </select>
-        </div>
-
         {/* Botão Adicionar */}
-        <div className="col-span-1 sm:col-span-2 lg:col-span-4 flex justify-center mt-4">
+        <div className="relative flex-1 min-w-[150px] flex items-end top-[1.3vh]">
+          {" "}
           <button
             type="submit"
-            className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-lg shadow-md hover:shadow-lg transition-all duration-200"
+            className="w-full h-[44px] bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-lg shadow-md hover:shadow-lg transition-all duration-200 p-2 button-gradient"
           >
             Adicionar
           </button>

@@ -11,6 +11,7 @@ import {
 } from "chart.js";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import { useTheme } from "./ThemeContext";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip);
 
@@ -24,6 +25,8 @@ const pastelColors = [
 ];
 
 const MonthlyExpensesLineChart: React.FC = () => {
+  const { isDarkMode } = useTheme();
+
   const allTransactions = useSelector(
     (state: RootState) => state.transactions.transactions
   );
@@ -37,11 +40,10 @@ const MonthlyExpensesLineChart: React.FC = () => {
   const transactionsToUse =
     filteredTransactions.length > 0 ? filteredTransactions : allTransactions;
 
-  // Função para calcular projeções de meses
   const calculateProjectionMonths = (startMonth: number) => {
     const months = [];
     for (let i = 0; i < 3; i++) {
-      const date = new Date(2023, startMonth - 1 + i, 1); // Avançar meses
+      const date = new Date(2023, startMonth - 1 + i, 1);
       months.push(
         date.toLocaleString("pt-BR", { month: "long" }).charAt(0).toUpperCase() +
           date.toLocaleString("pt-BR", { month: "long" }).slice(1)
@@ -52,7 +54,9 @@ const MonthlyExpensesLineChart: React.FC = () => {
 
   const displayedMonths =
     filteredTransactions.length > 0
-      ? calculateProjectionMonths(new Date(filteredTransactions[0]?.date).getMonth() + 1)
+      ? calculateProjectionMonths(
+          new Date(filteredTransactions[0]?.date).getMonth() + 1
+        )
       : calculateProjectionMonths(new Date().getMonth() - 2);
 
   useEffect(() => {
@@ -68,7 +72,7 @@ const MonthlyExpensesLineChart: React.FC = () => {
         legend: {
           display: true,
           labels: {
-            color: "#f3f4f6",
+            color: isDarkMode ? "#f3f4f6" : "#1f2937",
             font: { size: 12 },
           },
         },
@@ -76,39 +80,41 @@ const MonthlyExpensesLineChart: React.FC = () => {
       scales: {
         x: {
           ticks: {
-            color: "#f3f4f6",
+            color: isDarkMode ? "#f3f4f6" : "#1f2937",
             font: { size: 12 },
           },
           grid: {
-            color: "rgba(255, 255, 255, 0.1)",
+            color: isDarkMode
+              ? "rgba(255, 255, 255, 0.1)"
+              : "rgba(0, 0, 0, 0.1)",
           },
         },
         y: {
           ticks: {
-            color: "#f3f4f6",
+            color: isDarkMode ? "#f3f4f6" : "#1f2937",
             font: { size: 12 },
           },
           grid: {
-            color: "rgba(255, 255, 255, 0.1)",
+            color: isDarkMode
+              ? "rgba(255, 255, 255, 0.1)"
+              : "rgba(0, 0, 0, 0.1)",
           },
         },
       },
     };
 
     setChartOptions(options);
-  }, []);
+  }, [isDarkMode]);
 
-  // Processar os dados das transações e projeções
   const monthlyData: Record<string, Record<string, number>> = {};
 
   displayedMonths.forEach((month) => {
     monthlyData[month] = {};
     categories.forEach((category) => {
-      monthlyData[month][category] = 0; // Inicializar com zero
+      monthlyData[month][category] = 0;
     });
   });
 
-  // Preencher dados reais
   transactionsToUse
     .filter((tx) => tx.type === "Despesa")
     .forEach((transaction) => {
@@ -122,38 +128,27 @@ const MonthlyExpensesLineChart: React.FC = () => {
       }
     });
 
-  // Preencher projeções para meses futuros
-  const lastRealMonthIndex = displayedMonths.findIndex(
-    (month) => monthlyData[month] && Object.values(monthlyData[month]).some((value) => value > 0)
-  );
-
-  if (lastRealMonthIndex !== -1) {
-    for (let i = lastRealMonthIndex + 1; i < displayedMonths.length; i++) {
-      const currentMonth = displayedMonths[i];
-      const previousMonth = displayedMonths[lastRealMonthIndex];
-
-      categories.forEach((category) => {
-        monthlyData[currentMonth][category] =
-          monthlyData[previousMonth][category] * 0.95; // Exemplo de projeção (redução de 5%)
-      });
-    }
-  }
-
   const data = displayedMonths.map((month) =>
     categories.map((category) => monthlyData[month][category] || 0)
   );
 
+  const getColor = (index: number) => {
+    return isDarkMode
+      ? pastelColors[index] // Mesmas cores no Dark Mode (visíveis no fundo escuro)
+      : pastelColors[index]; // Mesmas cores no Light Mode
+  };
+
   const chartData = {
-    labels: displayedMonths, // Meses
+    labels: displayedMonths,
     datasets: categories.map((category, index) => ({
-      label: category, // Nome da categoria
-      data: data.map((month) => month[index]), // Valores para cada mês
-      borderColor: pastelColors[index],
-      backgroundColor: pastelColors[index],
+      label: category,
+      data: data.map((month) => month[index]),
+      borderColor: getColor(index),
+      backgroundColor: getColor(index),
+      pointBackgroundColor: getColor(index),
       borderWidth: 2,
       pointRadius: 5,
-      pointBackgroundColor: pastelColors[index],
-      tension: 0.3, // Suavizar as linhas
+      tension: 0.3,
     })),
   };
 

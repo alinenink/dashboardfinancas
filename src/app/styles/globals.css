@@ -174,19 +174,19 @@ body {
 }
 
 .button-gradient {
-  @apply px-4 py-2 rounded-lg font-medium text-white cursor-pointer transition-all duration-300;
-  background: linear-gradient(to right, #4facfe, #00f2fe); /* Gradiente claro */
+  @apply px-6 py-2 rounded-lg font-medium text-white cursor-pointer transition-all duration-300;
+  background: linear-gradient(to right, #afcdea, #9cd6da); /* Gradiente claro */
 }
 
 .button-gradient:hover {
   @apply shadow-md;
-  background: linear-gradient(to right, #00f2fe, #4facfe); /* Gradiente no hover */
+  background: linear-gradient(to right, #9cd6da, #afcdea); /* Gradiente no hover */
 }
 
 html.dark .button-gradient {
-  background: linear-gradient(to right, #1a73e8, #4285f4); /* Gradiente escuro */
+  background: linear-gradient(to right, #6d92c2, #4584eb); /* Gradiente escuro */
 }
 
 html.dark .button-gradient:hover {
-  background: linear-gradient(to right, #4285f4, #1a73e8); /* Gradiente escuro no hover */
+  background: linear-gradient(to right, #4584eb, #6d92c2); /* Gradiente escuro no hover */
 }

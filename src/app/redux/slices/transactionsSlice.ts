@@ -43,7 +43,7 @@ const generateTransactions = () => {
       id: id.toString(),
       value: 10000 + month * 500, // Valor fixo de renda com ajuste por mês
       category: "Salário",
-      date: `2023-${month.toString().padStart(2, "0")}-01`,
+      date: `2024-${month.toString().padStart(2, "0")}-01`,
       type: "Renda",
     });
     id++;
@@ -102,7 +102,7 @@ const transactionsSlice = createSlice({
   initialState,
   reducers: {
     addTransaction: (state, action: PayloadAction<Transaction>) => {
-      state.transactions.push(action.payload);
+      state.transactions.push(action.payload); // Atualiza o array de transações
     },
     removeTransaction: (state, action: PayloadAction<string>) => {
       state.transactions = state.transactions.filter(
