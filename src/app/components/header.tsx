@@ -7,7 +7,7 @@ export default function Header() {
 
   return (
     <header  className="header flex justify-center items-center px-6 py-4 shadow-md">
-        <h1 className="header-title">Dasboard de Finanças Pessoais</h1>
+        <h1 className="header-title">Dashboard de Finanças Pessoais</h1>
         <div className="header-separator"></div>
       <button
         onClick={toggleTheme}
