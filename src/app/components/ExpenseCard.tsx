@@ -1,47 +1,15 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip } from "chart.js";
 
 ChartJS.register(ArcElement, Tooltip);
 
-const ExpenseCard: React.FC = () => {
-  const transactions = useSelector(
-    (state: RootState) => state.transactions.transactions
-  );
-  const filteredTransactions = useSelector(
-    (state: RootState) => state.transactions.filteredTransactions
-  );
+interface ExpenseCardProps {
+  title: string;
+  data: { label: string; value: number }[];
+}
 
-  // Verificar se há filtros aplicados
-  const isFilterApplied = filteredTransactions.length > 0;
-
-  // Usar transações filtradas ou todas as transações como padrão
-  const transactionsToUse = isFilterApplied
-    ? filteredTransactions
-    : transactions;
-
-  console.log("Using Transactions:", transactionsToUse);
-
-  // Filtrar apenas despesas
-  const expenses = transactionsToUse.filter((tx) => tx.type === "Despesa");
-
-  // Calcular valores totais por categoria
-  const expenseByCategory: Record<string, number> = {};
-  expenses.forEach((expense) => {
-    const category = expense.category || "Outros";
-    if (!expenseByCategory[category]) {
-      expenseByCategory[category] = 0;
-    }
-    expenseByCategory[category] += expense.value;
-  });
-
-  const data = Object.entries(expenseByCategory).map(([label, value]) => ({
-    label,
-    value,
-  }));
-
+const ExpenseCard: React.FC<ExpenseCardProps> = ({ title, data }) => {
   const total = data.reduce((sum, item) => sum + item.value, 0);
 
   // Cores fixas para categorias
@@ -94,7 +62,7 @@ const ExpenseCard: React.FC = () => {
     <div className="flex flex-col p-4 bg-white dark:bg-gray-800 shadow-md rounded-lg card-h">
       {/* Título do card */}
       <h3 className="text-lg font-bold mb-4 text-left text-gray-800 dark:text-gray-100">
-        Categorias de Despesas
+        {title}
       </h3>
 
       {/* Conteúdo do card: gráfico e legendas */}

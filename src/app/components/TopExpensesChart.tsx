@@ -38,7 +38,7 @@ const TopExpensesChart: React.FC = () => {
 
   // Calcular o mês do último mês ou o mês do filtro
   const today = new Date();
-  const lastThreeMonths = [];
+  const lastThreeMonths: any = [];
   for (let i = 2; i >= 0; i--) {
     const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
     lastThreeMonths.push(date.getMonth() + 1); // Mês 1-12

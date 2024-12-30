@@ -56,7 +56,7 @@ const ProjectionChart: React.FC = () => {
   const displayedMonths = calculateMonths(startMonth);
 
   // Calcular gastos reais para os meses selecionados
-  const actualExpenses = displayedMonths.slice(0, 3).map((month, index) => {
+  const actualExpenses = displayedMonths.slice(0, 3).map((month) => {
     const expensesForMonth = transactionsToUse.filter((transaction) => {
       const transactionDate = new Date(transaction.date);
       const transactionMonth =

@@ -79,8 +79,8 @@ const TransactionHistory: React.FC = () => {
           >
             <option value="">Todas</option>
             {categories.map((category) => (
-              <option key={category} value={category}>
-                {category}
+              <option key={category} value={category || ""}>
+                {category || "Outros"}
               </option>
             ))}
           </select>
@@ -161,7 +161,9 @@ const TransactionHistory: React.FC = () => {
                   </td>
                   <td className="border-b p-2">
                     <button
-                      onClick={() => dispatch(removeTransaction(transaction.id))}
+                      onClick={() =>
+                        dispatch(removeTransaction(transaction.id))
+                      }
                       className="text-red-500 hover:text-red-600"
                     >
                       Remover
