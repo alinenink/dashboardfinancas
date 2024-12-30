@@ -64,7 +64,7 @@ body {
 /* Mobile Sidebar */
 @media (max-width: 767px) {
   .sidebar {
-    @apply absolute left-[284px] w-[35vh] h-full transform -translate-x-full transition-transform duration-300 ease-in-out bg-white dark:bg-gray-800 shadow-lg z-20;
+    @apply relative  h-full transform transition-transform duration-300 ease-in-out bg-white dark:bg-gray-800 shadow-lg z-20;
   }
 }
 

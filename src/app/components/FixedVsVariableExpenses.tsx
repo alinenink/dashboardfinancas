@@ -124,16 +124,6 @@ const FixedVsVariableExpenses: React.FC = () => {
         <div className="text-sm font-medium text-gray-800 dark:text-gray-100">
           <strong>Gastos Variáveis:</strong> R$ {variableTotal.toFixed(2)}
         </div>
-        {newVariableCategories.size > 0 && (
-          <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mt-2">
-            <strong>Novas Categorias Variáveis Detectadas:</strong>
-            <ul>
-              {Array.from(newVariableCategories).map((category) => (
-                <li key={category}>{category}</li>
-              ))}
-            </ul>
-          </div>
-        )}
       </div>
     </div>
   );
